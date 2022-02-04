@@ -8,13 +8,24 @@ class RouteProfile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Load the argument from the route
-    final args = ModalRoute.of(context)!.settings.arguments as User;
+    // final args = ModalRoute.of(context)!.settings.arguments as User;
+    final args = ModalRoute.of(context)!.settings.arguments as List<User>;
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(args.name),
+        title: Text(args.toString()),
       ),
-      body: Text(args.credit.toString()),
+      body: ListView.builder(
+        itemCount: args.length,
+        itemBuilder: (context, index) {
+          final item = args[index];
+
+          return ListTile(
+            title: Text(item.name),
+            subtitle: Text(item.credit.toString()),
+          );
+        },
+      ),
       drawer: const MenuApp(),
     );
   }

@@ -13,12 +13,19 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Named Routes Demo',
-      initialRoute: '/',
-      routes: {
-        '/': (context) => const RouteHome(),
-        '/profile': (context) => const RouteProfile(),
-      },
-    );
+        title: 'Named Routes Demo',
+        initialRoute: '/',
+        routes: {
+          '/': (context) => const RouteHome(),
+          '/profile': (context) => const RouteProfile(),
+        },
+        theme: myAppTheme());
   }
+}
+
+myAppTheme() {
+  return ThemeData(
+      brightness: Brightness.light,
+      primarySwatch: Colors.amber,
+      fontFamily: 'Georgia');
 }

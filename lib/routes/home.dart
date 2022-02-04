@@ -33,6 +33,9 @@ class RouteHome extends StatefulWidget {
 class _RouteHomeState extends State<RouteHome> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
+  String test = "null";
+  List<User> listItems = [];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,40 +44,61 @@ class _RouteHomeState extends State<RouteHome> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              TextFormField(
-                decoration: const InputDecoration(
-                  hintText: 'Enter your email',
-                ),
-                validator: (String? value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter some text';
-                  }
-                  return null;
-                },
+        child: Column(
+          children: [
+            Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  TextFormField(
+                    decoration: const InputDecoration(
+                      hintText: 'Enter a name',
+                    ),
+                    validator: (String? value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter some text';
+                      }
+                      return null;
+                    },
+                    onChanged: (value) => setState(() {
+                      test = value;
+                    }),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 16.0),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        // Validate will return true if the form is valid, or false if
+                        // the form is invalid.
+                        if (_formKey.currentState!.validate()) {
+                          // Process data.
+                          if (test != null) {
+                            listItems.add(User(credit: 0, name: test));
+                          }
+                        }
+                      },
+                      child: const Text('Add participant'),
+                    ),
+                  ),
+                ],
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16.0),
-                child: ElevatedButton(
-                  onPressed: () {
-                    // Validate will return true if the form is valid, or false if
-                    // the form is invalid.
-                    if (_formKey.currentState!.validate()) {
-                      // Process data.
-                    }
-                  },
-                  child: const Text('Submit'),
-                ),
-              ),
-            ],
-          ),
+            ),
+            ListView.builder(
+              itemCount: listItems.length,
+              itemBuilder: (context, index) {
+                final item = listItems[index];
+
+                return ListTile(
+                  title: Text(item.name),
+                  subtitle: Text(item.credit.toString()),
+                );
+              },
+            )
+          ],
         ),
       ),
-      drawer: const MenuApp(),
+      drawer: MenuApp(arguments: listItems),
     );
   }
 }

@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import '../items/user.dart';
 
 class MenuApp extends StatelessWidget {
-  const MenuApp({Key? key}) : super(key: key);
+  const MenuApp({Key? key, this.arguments}) : super(key: key);
+
+  final arguments;
 
   @override
   Widget build(BuildContext context) {
@@ -12,14 +14,14 @@ class MenuApp extends StatelessWidget {
       child: ListView(
         padding: EdgeInsets.zero,
         children: <Widget>[
-          const DrawerHeader(
+          DrawerHeader(
             decoration: BoxDecoration(
-              color: Colors.blue,
+              color: Theme.of(context).colorScheme.primary,
             ),
             child: Text(
               'Drawer Header',
               style: TextStyle(
-                color: Colors.white,
+                color: Theme.of(context).colorScheme.onPrimary,
                 fontSize: 24,
               ),
             ),
@@ -31,7 +33,10 @@ class MenuApp extends StatelessWidget {
                     if (route != null && route.settings.name == '/')
                       {Navigator.pop(context)}
                     else
-                      {Navigator.pushNamed(context, '/')}
+                      {
+                        Navigator.pushReplacementNamed(context, '/',
+                            arguments: arguments)
+                      }
                   }),
           ListTile(
               leading: const Icon(Icons.account_circle),
@@ -41,8 +46,8 @@ class MenuApp extends StatelessWidget {
                       {Navigator.pop(context)}
                     else
                       {
-                        Navigator.pushNamed(context, '/profile',
-                            arguments: User())
+                        Navigator.pushReplacementNamed(context, '/profile',
+                            arguments: arguments)
                         // Here we are giving User as parameter to the route /profile
                       }
                   }),
