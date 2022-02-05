@@ -1,27 +1,8 @@
 import 'package:flutter/material.dart';
 import '../components/menu.dart';
 import '../items/user.dart';
+import '../components/listItems.dart';
 import 'package:mongo_dart/mongo_dart.dart' show Db, DbCollection;
-
-// class RouteHome extends StatelessWidget {
-//   const RouteHome({Key? key}) : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: const Text('Messages'),
-//       ),
-//       body: Padding(
-//         padding: const EdgeInsets.all(30),
-//         child: Column(
-//           children: [],
-//         ),
-//       ),
-//       drawer: const MenuApp(),
-//     );
-//   }
-// }
 
 class RouteHome extends StatefulWidget {
   const RouteHome({Key? key}) : super(key: key);
@@ -36,8 +17,15 @@ class _RouteHomeState extends State<RouteHome> {
   String test = "null";
   List<User> listItems = [];
 
+  final fieldText = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
+    // Load data if already exist
+    if (ModalRoute.of(context)!.settings.arguments != null) {
+      listItems = ModalRoute.of(context)!.settings.arguments as List<User>;
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Messages'),
@@ -61,6 +49,7 @@ class _RouteHomeState extends State<RouteHome> {
                       }
                       return null;
                     },
+                    controller: fieldText,
                     onChanged: (value) => setState(() {
                       test = value;
                     }),
@@ -74,8 +63,11 @@ class _RouteHomeState extends State<RouteHome> {
                         if (_formKey.currentState!.validate()) {
                           // Process data.
                           if (test != null) {
-                            listItems.add(User(credit: 0, name: test));
+                            setState(() {
+                              listItems.add(User(credit: 0, name: test));
+                            });
                           }
+                          fieldText.clear();
                         }
                       },
                       child: const Text('Add participant'),
@@ -84,17 +76,7 @@ class _RouteHomeState extends State<RouteHome> {
                 ],
               ),
             ),
-            ListView.builder(
-              itemCount: listItems.length,
-              itemBuilder: (context, index) {
-                final item = listItems[index];
-
-                return ListTile(
-                  title: Text(item.name),
-                  subtitle: Text(item.credit.toString()),
-                );
-              },
-            )
+            ListItems(listItems: listItems)
           ],
         ),
       ),
