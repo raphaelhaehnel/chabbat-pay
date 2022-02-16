@@ -14,8 +14,8 @@ class ListItems extends StatelessWidget {
         final item = listItems[index];
 
         return ListTile(
-          title: Text(item.name),
-          subtitle: Text(item.credit.toString()),
+          title: Center(child: Text(item.name)),
+          subtitle: Center(child: Text(item.credit.toString())),
         );
       },
       shrinkWrap: true,

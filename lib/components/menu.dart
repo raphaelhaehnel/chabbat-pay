@@ -30,11 +30,11 @@ class MenuApp extends StatelessWidget {
               leading: const Icon(Icons.message),
               title: const Text('Messages'),
               onTap: () => {
-                    if (route != null && route.settings.name == '/')
+                    if (route != null && route.settings.name == '/home')
                       {Navigator.pop(context)}
                     else
                       {
-                        Navigator.pushReplacementNamed(context, '/',
+                        Navigator.pushReplacementNamed(context, '/home',
                             arguments: arguments)
                       }
                   }),

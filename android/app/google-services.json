@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1093457557540",
+    "project_id": "payetonchabbat-1570735814576",
+    "storage_bucket": "payetonchabbat-1570735814576.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1093457557540:android:94e8adb69f8fbce43ac0b1",
+        "android_client_info": {
+          "package_name": "com.example.chabbat_pay"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1093457557540-arrnvt4comtjf6fgrqlgfetu98g9jkut.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBWEtWszSKGVHSlQvfjm4ooVv9IEIM_jo4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1093457557540-arrnvt4comtjf6fgrqlgfetu98g9jkut.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
