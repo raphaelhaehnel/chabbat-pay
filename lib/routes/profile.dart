@@ -6,7 +6,9 @@ import '../components/listItems.dart';
 import '../components/my_button.dart';
 
 class RouteProfile extends StatelessWidget {
-  const RouteProfile({Key? key}) : super(key: key);
+  RouteProfile({Key? key}) : super(key: key) {
+    initializeDefault();
+  }
 
   Future<void> initializeDefault() async {
     FirebaseApp app = await Firebase.initializeApp(
@@ -33,7 +35,6 @@ class RouteProfile extends StatelessWidget {
       listItems = ModalRoute.of(context)!.settings.arguments as List<User>;
     }
 
-    initializeDefault();
     return Scaffold(
       appBar: AppBar(
         title: const Text("Profile"),

@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
         routes: {
           '/': (context) => LoginScreen(),
           '/home': (context) => const RouteHome(),
-          '/profile': (context) => const RouteProfile(),
+          '/profile': (context) => RouteProfile(),
         },
         theme: myAppTheme());
   }

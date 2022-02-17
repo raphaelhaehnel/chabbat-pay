@@ -43,17 +43,21 @@ class FirebaseData extends StatelessWidget {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             print((snapshot.data! as QuerySnapshot).docs[0]['name']);
-            return ListView.builder(
-              itemCount: (snapshot.data! as QuerySnapshot).docs.length,
-              itemBuilder: (context, index) {
-                final item = (snapshot.data! as QuerySnapshot).docs[index];
+            return Container(
+              height: 300.0, // Change as per your requirement
+              width: 300.0, // Change as per your requirement
+              child: ListView.builder(
+                itemCount: (snapshot.data! as QuerySnapshot).docs.length,
+                itemBuilder: (context, index) {
+                  final item = (snapshot.data! as QuerySnapshot).docs[index];
 
-                return ListTile(
-                  title: Center(child: Text(item['name'])),
-                  subtitle: Center(child: Text(item['credit'].toString())),
-                );
-              },
-              shrinkWrap: true,
+                  return ListTile(
+                    title: Center(child: Text(item['name'])),
+                    subtitle: Center(child: Text(item['credit'].toString())),
+                  );
+                },
+                shrinkWrap: true,
+              ),
             );
           } else {
             return const Text('No data.');
