@@ -34,6 +34,19 @@ class myButton extends StatelessWidget {
 class FirebaseData extends StatelessWidget {
   const FirebaseData({Key? key}) : super(key: key);
 
+  updateData(DocumentSnapshot item) {
+    // We run a transaction so the update takes place only after the information is updated on the server.
+    FirebaseFirestore.instanceFor(app: Firebase.app('myFirebase'))
+        .runTransaction((transaction) async {
+      DocumentSnapshot freshSnap = await transaction.get(item.reference);
+      await transaction
+          .update(freshSnap.reference, {'credit': freshSnap['credit'] + 1});
+    });
+
+    // If you want instant but not robust update:
+    // item.reference.update({'credit': item['credit'] + 1});
+  }
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
@@ -42,19 +55,19 @@ class FirebaseData extends StatelessWidget {
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            print((snapshot.data! as QuerySnapshot).docs[0]['name']);
             return Container(
               height: 300.0, // Change as per your requirement
               width: 300.0, // Change as per your requirement
               child: ListView.builder(
                 itemCount: (snapshot.data! as QuerySnapshot).docs.length,
                 itemBuilder: (context, index) {
-                  final item = (snapshot.data! as QuerySnapshot).docs[index];
+                  DocumentSnapshot item =
+                      (snapshot.data! as QuerySnapshot).docs[index];
 
                   return ListTile(
-                    title: Center(child: Text(item['name'])),
-                    subtitle: Center(child: Text(item['credit'].toString())),
-                  );
+                      title: Center(child: Text(item['name'])),
+                      subtitle: Center(child: Text(item['credit'].toString())),
+                      onTap: () => updateData(item));
                 },
                 shrinkWrap: true,
               ),

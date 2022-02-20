@@ -28,7 +28,7 @@ class MenuApp extends StatelessWidget {
           ),
           ListTile(
               leading: const Icon(Icons.message),
-              title: const Text('Messages'),
+              title: const Text('Home'),
               onTap: () => {
                     if (route != null && route.settings.name == '/home')
                       {Navigator.pop(context)}
