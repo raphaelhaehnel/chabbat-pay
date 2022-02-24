@@ -6,24 +6,7 @@ import '../components/listItems.dart';
 import '../components/my_button.dart';
 
 class RouteProfile extends StatelessWidget {
-  RouteProfile({Key? key}) : super(key: key) {
-    initializeDefault();
-  }
-
-  Future<void> initializeDefault() async {
-    FirebaseApp app = await Firebase.initializeApp(
-        name: "myFirebase", options: firebaseOptions);
-    print('Initialized default app $app');
-  }
-
-  FirebaseOptions get firebaseOptions => const FirebaseOptions(
-      apiKey: "AIzaSyD9bvtsRsrmwgi9RuVy9ynCzCvYFd9D-jU",
-      authDomain: "payetonchabbat-1570735814576.firebaseapp.com",
-      projectId: "payetonchabbat-1570735814576",
-      storageBucket: "payetonchabbat-1570735814576.appspot.com",
-      messagingSenderId: "1093457557540",
-      appId: "1:1093457557540:web:b5ef3e1bd352959b3ac0b1",
-      measurementId: "G-0VB8WWZLC5");
+  RouteProfile({Key? key}) : super(key: key) {}
 
   @override
   Widget build(BuildContext context) {
