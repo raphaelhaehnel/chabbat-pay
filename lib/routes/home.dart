@@ -1,3 +1,4 @@
+import 'package:chabbat_pay/services/auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +15,8 @@ class RouteHome extends StatefulWidget {
 }
 
 class _RouteHomeState extends State<RouteHome> {
+  final AuthService _auth = AuthService();
+
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   String test = "null";
@@ -47,13 +50,24 @@ class _RouteHomeState extends State<RouteHome> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Messages'),
+        title: const Text('Home'),
+        actions: [
+          TextButton.icon(
+              onPressed: () async {
+                await _auth.signOut();
+              },
+              icon: const Icon(Icons.person),
+              label: const Text('Logout'),
+              style: TextButton.styleFrom(primary: Colors.grey[800])),
+        ],
       ),
       body: Builder(builder: (context) {
         return Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
             children: [
+              //TODO how to work with stream/future in Text widgets ?
+              Text(_auth.user.first.toString()),
               Form(
                 key: _formKey,
                 child: Column(

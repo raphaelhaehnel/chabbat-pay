@@ -1,6 +1,8 @@
+import 'package:chabbat_pay/routes/wrapper.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import './routes/home.dart';
 import './routes/profile.dart';
 import 'package:flutter_login/flutter_login.dart';
@@ -16,15 +18,20 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        title: 'Named Routes Demo',
-        initialRoute: '/',
-        routes: {
-          '/': (context) => LoginScreen(),
-          '/home': (context) => const RouteHome(),
-          '/profile': (context) => RouteProfile(),
-        },
-        theme: myAppTheme());
+    return StreamProvider.value(
+      value: AuthService().user,
+      initialData: null,
+      child: MaterialApp(
+          home: Wrapper(),
+          title: 'Named Routes Demo',
+          // initialRoute: '/',
+          // routes: {
+          //   '/': (context) => LoginScreen(),
+          //   '/home': (context) => const RouteHome(),
+          //   '/profile': (context) => RouteProfile(),
+          // },
+          theme: myAppTheme()),
+    );
   }
 }
 
@@ -59,11 +66,12 @@ class LoginScreen extends StatelessWidget {
     // });
     dynamic result = await _auth.signInEmail(data.name, data.password);
     if (result == null) {
-      return 'Error signing in';
-    } else {
-      result = result as User;
-      print('User id: ${result.uid}');
       return result.toString();
+    } else {
+      print('User id: ${result.uid}');
+
+      // Return null to validate authentication
+      return null;
     }
   }
 
