@@ -1,3 +1,4 @@
+import 'package:chabbat_pay/services/database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -39,6 +40,8 @@ class AuthService {
       UserCredential result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
       User? user = result.user;
+      await DatabaseService(uid: user!.uid).updateUserData(
+          'Anonymous', ["chabbat 1", "chabbat 2"], 0, user.email);
       return user;
     } catch (err) {
       print(err.toString());

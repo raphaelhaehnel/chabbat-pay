@@ -1,4 +1,4 @@
-import 'package:chabbat_pay/routes/wrapper.dart';
+import 'package:chabbat_pay/routes/loginRedirection.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +7,7 @@ import './routes/home.dart';
 import './routes/profile.dart';
 import 'package:flutter_login/flutter_login.dart';
 import './services/auth.dart';
+import 'package:chabbat_pay/routes/chabbat.dart';
 
 void main() async {
   await initializeDefault();
@@ -22,14 +23,13 @@ class MyApp extends StatelessWidget {
       value: AuthService().user,
       initialData: null,
       child: MaterialApp(
-          home: Wrapper(),
           title: 'Named Routes Demo',
-          // initialRoute: '/',
-          // routes: {
-          //   '/': (context) => LoginScreen(),
-          //   '/home': (context) => const RouteHome(),
-          //   '/profile': (context) => RouteProfile(),
-          // },
+          initialRoute: '/',
+          routes: {
+            '/': (context) => LoginScreen(),
+            '/home': (context) => const RouteHome(),
+            '/profile': (context) => RouteProfile(),
+          },
           theme: myAppTheme()),
     );
   }
@@ -81,7 +81,14 @@ class LoginScreen extends StatelessWidget {
     //   return null;
     // });
     dynamic result = await _auth.signUpEmail(data.name, data.password);
-    return result.toString();
+    if (result == null) {
+      return result.toString();
+    } else {
+      print('User id: ${result.uid}');
+
+      // Return null to validate authentication
+      return null;
+    }
   }
 
   Future<String?> _recoverPassword(String name) {
@@ -103,7 +110,7 @@ class LoginScreen extends StatelessWidget {
       onSignup: _signupUser,
       onSubmitAnimationCompleted: () {
         Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (context) => RouteProfile(),
+          builder: (context) => LoginRedirection(), //RouteHome(),
         ));
       },
       onRecoverPassword: _recoverPassword,
@@ -111,12 +118,14 @@ class LoginScreen extends StatelessWidget {
   }
 }
 
+// Initialize the Firebase module
 Future<void> initializeDefault() async {
   FirebaseApp app = await Firebase.initializeApp(
       name: "myFirebase", options: firebaseOptions);
   print('Initialized default app $app');
 }
 
+// Authentification parameters of Firebase
 FirebaseOptions get firebaseOptions => const FirebaseOptions(
     apiKey: "AIzaSyD9bvtsRsrmwgi9RuVy9ynCzCvYFd9D-jU",
     authDomain: "payetonchabbat-1570735814576.firebaseapp.com",

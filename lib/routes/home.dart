@@ -1,12 +1,15 @@
 import 'package:chabbat_pay/services/auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../components/menu.dart';
-import '../items/user.dart';
 import '../components/listItems.dart';
+import 'package:chabbat_pay/items/student.dart';
 import 'package:mongo_dart/mongo_dart.dart' show Db, DbCollection;
 
+//
 class RouteHome extends StatefulWidget {
   const RouteHome({Key? key}) : super(key: key);
 
@@ -15,19 +18,26 @@ class RouteHome extends StatefulWidget {
 }
 
 class _RouteHomeState extends State<RouteHome> {
+  // Instance of the firebase module
   final AuthService _auth = AuthService();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
+  // String containing the name of the user, from the text input
   String test = "null";
-  List<User> listItems = [];
 
+  // The list of items that we'll build from the ModalRoute
+  List<Student> listItems = [];
+
+  // Controller to clear the text field
   final fieldText = TextEditingController();
 
+  // Retrieves the collection from the Firebase database
   CollectionReference bandnames =
       FirebaseFirestore.instanceFor(app: Firebase.app('myFirebase'))
           .collection('bandnames');
 
+  // The function adds a new user to Firebase
   Future<void> addUser(BuildContext context, String name, int credit) {
     // Call the user's CollectionReference to add a new user
     return bandnames
@@ -45,8 +55,11 @@ class _RouteHomeState extends State<RouteHome> {
   Widget build(BuildContext context) {
     // Load data if already exist
     if (ModalRoute.of(context)!.settings.arguments != null) {
-      listItems = ModalRoute.of(context)!.settings.arguments as List<User>;
+      listItems = ModalRoute.of(context)!.settings.arguments as List<Student>;
     }
+
+    // Load the authenticated user from the provider
+    User? _user = Provider.of<User?>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -55,6 +68,7 @@ class _RouteHomeState extends State<RouteHome> {
           TextButton.icon(
               onPressed: () async {
                 await _auth.signOut();
+                Navigator.pushReplacementNamed(context, '/');
               },
               icon: const Icon(Icons.person),
               label: const Text('Logout'),
@@ -66,8 +80,7 @@ class _RouteHomeState extends State<RouteHome> {
           padding: const EdgeInsets.all(8.0),
           child: Column(
             children: [
-              //TODO how to work with stream/future in Text widgets ?
-              Text(_auth.user.first.toString()),
+              Text(_user == null ? 'ERROR' : _user.uid),
               Form(
                 key: _formKey,
                 child: Column(
@@ -98,7 +111,7 @@ class _RouteHomeState extends State<RouteHome> {
                             // Process data.
                             if (test != null) {
                               setState(() {
-                                listItems.add(User(credit: 0, name: test));
+                                listItems.add(Student(credit: 0, name: test));
                                 addUser(context, test, 0);
                               });
                             }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../items/user.dart';
+import '../items/student.dart';
 
 class MenuApp extends StatelessWidget {
   const MenuApp({Key? key, this.arguments}) : super(key: key);

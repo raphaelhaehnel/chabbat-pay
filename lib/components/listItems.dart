@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import './../items/user.dart';
+import './../items/student.dart';
 
 class ListItems extends StatelessWidget {
   ListItems({Key? key, this.listItems = const []}) : super(key: key);
 
-  final List<User> listItems;
+  final List<Student> listItems;
 
   @override
   Widget build(BuildContext context) {

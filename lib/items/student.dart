@@ -1,9 +1,9 @@
-class User {
-  User({this.name = 'null', this.credit = -1, this.uuid = '0'}) {
+class Student {
+  Student({this.name = 'null', this.credit = -1, this.uid = '0'}) {
     print('this is the constructor');
   }
 
-  final String uuid;
+  final String uid;
   final String name;
   final double credit;
 
