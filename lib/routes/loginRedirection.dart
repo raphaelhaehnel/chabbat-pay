@@ -1,3 +1,5 @@
+import 'package:chabbat_pay/routes/chabbat.dart';
+import 'package:chabbat_pay/routes/home.dart';
 import 'package:chabbat_pay/services/database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -14,33 +16,46 @@ class LoginRedirection extends StatefulWidget {
 }
 
 class _LoginRedirectionState extends State<LoginRedirection> {
-  ChabbatModel _chabbat = ChabbatModel(date: Timestamp(0, 0));
+  ChabbatModel? _chabbat = null;
 
   _LoginRedirectionState() {}
 
   @override
   Widget build(BuildContext context) {
     // TODO: we only want to build the login redirection, not the chabbat page !
+    // TODO: how to call getLastChabbat one time only
 
     User? _user = Provider.of<User?>(context);
 
     // We need to get the user data that correspond to the uid, and check if
     // there is an opened chabbat in the list of chabbats
 
-    //
+    print('BEFORE');
     getLastChabbat(_user).then((val) => setState(() {
           _chabbat = val;
         }));
+    print('AFTER');
 
-    return Scaffold(
-      appBar: AppBar(title: Text(_chabbat.name)),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: [Text(_chabbat.date.toDate().toString())],
-        ),
-      ),
-    );
+    if (_chabbat == null) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    } else if (_chabbat!.date == Timestamp(0, 0)) {
+      return RouteHome();
+    } else {
+      return RouteChabbat();
+      // Scaffold(
+      //   appBar: AppBar(title: Text(_chabbat!.name)),
+      //   body: Padding(
+      //     padding: const EdgeInsets.all(8.0),
+      //     child: Column(
+      //       children: [
+      //         Text(_chabbat!.date.toDate().toString()),
+      //       ],
+      //     ),
+      //   ),
+      // );
+    }
   }
 
   Future getLastChabbat(_user) async {
@@ -97,6 +112,6 @@ class _LoginRedirectionState extends State<LoginRedirection> {
       }
       return maxChabbat;
     }
-    return 'Failed to load data...';
+    return null;
   }
 }

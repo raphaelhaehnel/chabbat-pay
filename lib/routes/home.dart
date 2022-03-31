@@ -75,61 +75,28 @@ class _RouteHomeState extends State<RouteHome> {
               style: TextButton.styleFrom(primary: Colors.grey[800])),
         ],
       ),
-      body: Builder(builder: (context) {
-        return Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: [
-              Text(_user == null ? 'ERROR' : _user.uid),
-              Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    TextFormField(
-                      decoration: const InputDecoration(
-                        hintText: 'Enter a name',
-                      ),
-                      validator: (String? value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter some text';
-                        }
-                        return null;
-                      },
-                      controller: fieldText,
-                      onChanged: (value) => setState(() {
-                        test = value;
-                      }),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 16.0),
-                      child: ElevatedButton(
-                        onPressed: () {
-                          // Validate will return true if the form is valid, or false if
-                          // the form is invalid.
-                          if (_formKey.currentState!.validate()) {
-                            // Process data.
-                            if (test != null) {
-                              setState(() {
-                                listItems.add(Student(credit: 0, name: test));
-                                addUser(context, test, 0);
-                              });
-                            }
-                            fieldText.clear();
-                          }
-                        },
-                        child: const Text('Add participant'),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              ListItems(listItems: listItems)
-            ],
-          ),
-        );
-      }),
-      drawer: MenuApp(arguments: listItems),
+      body: Center(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ElevatedButton(
+                  onPressed: () => {}, child: const Text('Opened chabbats')),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ElevatedButton(
+                  onPressed: () => {}, child: const Text('Join chabbat')),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ElevatedButton(
+                  onPressed: () => {}, child: const Text('Create chabbat')),
+            ),
+          ],
+        ),
+      ),
+      drawer: MenuApp(),
     );
   }
 }
