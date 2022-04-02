@@ -18,8 +18,6 @@ class LoginRedirection extends StatefulWidget {
 class _LoginRedirectionState extends State<LoginRedirection> {
   ChabbatModel? _chabbat = null;
 
-  _LoginRedirectionState() {}
-
   @override
   Widget build(BuildContext context) {
     // TODO: we only want to build the login redirection, not the chabbat page !
@@ -30,13 +28,10 @@ class _LoginRedirectionState extends State<LoginRedirection> {
     // We need to get the user data that correspond to the uid, and check if
     // there is an opened chabbat in the list of chabbats
 
-    print('BEFORE');
-    getLastChabbat(_user).then((val) => setState(() {
-          _chabbat = val;
-        }));
-    print('AFTER');
-
     if (_chabbat == null) {
+      getLastChabbat(_user).then((val) => setState(() {
+            _chabbat = val;
+          }));
       return const Center(
         child: CircularProgressIndicator(),
       );
