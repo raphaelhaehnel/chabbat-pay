@@ -77,21 +77,42 @@ class _RouteHomeState extends State<RouteHome> {
       ),
       body: Center(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: ElevatedButton(
-                  onPressed: () => {}, child: const Text('Opened chabbats')),
+              child: Container(
+                child: ElevatedButton(
+                  onPressed: () => {},
+                  child: const Text('Opened chabbats'),
+                ),
+                width: 180,
+              ),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: ElevatedButton(
-                  onPressed: () => {}, child: const Text('Join chabbat')),
+              child: Container(
+                child: ElevatedButton(
+                    onPressed: () => Navigator.pushNamed(
+                          context,
+                          '/home/join',
+                        ),
+                    child: const Text('Join chabbat')),
+                width: 180,
+              ),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: ElevatedButton(
-                  onPressed: () => {}, child: const Text('Create chabbat')),
+              child: Container(
+                child: ElevatedButton(
+                    onPressed: () => Navigator.pushNamed(
+                          context,
+                          '/home/new',
+                        ),
+                    child: const Text('Create chabbat')),
+                width: 180,
+              ),
             ),
           ],
         ),

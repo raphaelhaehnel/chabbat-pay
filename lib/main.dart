@@ -1,4 +1,6 @@
+import 'package:chabbat_pay/routes/joinChabbat.dart';
 import 'package:chabbat_pay/routes/loginRedirection.dart';
+import 'package:chabbat_pay/routes/newChabbat.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -29,6 +31,8 @@ class MyApp extends StatelessWidget {
             '/': (context) => LoginScreen(),
             '/home': (context) => const RouteHome(),
             '/profile': (context) => RouteProfile(),
+            '/home/new': (context) => NewChabatRoute(),
+            '/home/join': (context) => JoinChabatRoute(),
           },
           theme: myAppTheme()),
     );

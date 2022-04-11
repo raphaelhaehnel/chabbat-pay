@@ -38,8 +38,23 @@ class RouteProfile extends StatelessWidget {
       ),
       body: Column(
         children: [
-          Text(_user?.displayName ?? 'null'),
-          Text(_user?.email ?? 'null')
+          Card(
+            child: ListTile(
+              title: const Text('Name'),
+              subtitle: Center(child: Text(_user?.displayName ?? 'null')),
+            ),
+          ),
+          Card(
+            child: ListTile(
+              title: const Text('Email'),
+              subtitle: Center(child: Text(_user?.email ?? 'null')),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ElevatedButton(
+                onPressed: () {}, child: const Text('Open chabbat history')),
+          ),
         ],
       ),
       drawer: const MenuApp(),
