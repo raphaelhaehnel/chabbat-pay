@@ -23,6 +23,7 @@ class _LoginRedirectionState extends State<LoginRedirection> {
     // TODO: we only want to build the login redirection, not the chabbat page !
     // TODO: how to call getLastChabbat one time only
 
+    // We are here
     User? _user = Provider.of<User?>(context);
 
     // We need to get the user data that correspond to the uid, and check if
