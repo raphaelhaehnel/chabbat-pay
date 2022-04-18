@@ -48,14 +48,17 @@ class _NewChabatRouteState extends State<NewChabatRoute> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: ElevatedButton(
-                      onPressed: () => {
-                            if (_formKey.currentState!.validate())
-                              {
-                                DatabaseService(uid: _user!.uid)
-                                    .createChabbatData(_chabbatName!),
-                                Navigator.pop(context)
-                              }
-                          },
+                      onPressed: () async {
+                        if (_formKey.currentState!.validate()) {
+                          String chabbat_id =
+                              await DatabaseService(uid: _user!.uid)
+                                  .createChabbatData(_chabbatName!);
+                          Navigator.pop(context);
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: Text(
+                                  'Chabbat $_chabbatName created ! ID: $chabbat_id')));
+                        }
+                      },
                       child: const Text('OK')),
                 ),
               ],

@@ -1,3 +1,4 @@
+import 'package:chabbat_pay/routes/chabbatHistory.dart';
 import 'package:chabbat_pay/routes/joinChabbat.dart';
 import 'package:chabbat_pay/routes/loginRedirection.dart';
 import 'package:chabbat_pay/routes/newChabbat.dart';
@@ -9,7 +10,6 @@ import './routes/home.dart';
 import './routes/profile.dart';
 import 'package:flutter_login/flutter_login.dart';
 import './services/auth.dart';
-import 'package:chabbat_pay/routes/chabbat.dart';
 
 void main() async {
   await initializeDefault();
@@ -31,6 +31,7 @@ class MyApp extends StatelessWidget {
             '/': (context) => LoginScreen(),
             '/home': (context) => const RouteHome(),
             '/profile': (context) => RouteProfile(),
+            '/profile/history': (context) => ChabbatHistoryRoute(),
             '/home/new': (context) => NewChabatRoute(),
             '/home/join': (context) => JoinChabatRoute(),
           },

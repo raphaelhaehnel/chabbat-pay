@@ -53,7 +53,11 @@ class RouteProfile extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: ElevatedButton(
-                onPressed: () {}, child: const Text('Open chabbat history')),
+                onPressed: () => Navigator.pushNamed(
+                      context,
+                      '/profile/history',
+                    ),
+                child: const Text('Open chabbat history')),
           ),
         ],
       ),

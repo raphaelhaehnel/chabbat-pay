@@ -20,10 +20,6 @@ class _LoginRedirectionState extends State<LoginRedirection> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: we only want to build the login redirection, not the chabbat page !
-    // TODO: how to call getLastChabbat one time only
-
-    // We are here
     User? _user = Provider.of<User?>(context);
 
     // We need to get the user data that correspond to the uid, and check if
@@ -40,17 +36,6 @@ class _LoginRedirectionState extends State<LoginRedirection> {
       return RouteHome();
     } else {
       return RouteChabbat();
-      // Scaffold(
-      //   appBar: AppBar(title: Text(_chabbat!.name)),
-      //   body: Padding(
-      //     padding: const EdgeInsets.all(8.0),
-      //     child: Column(
-      //       children: [
-      //         Text(_chabbat!.date.toDate().toString()),
-      //       ],
-      //     ),
-      //   ),
-      // );
     }
   }
 
@@ -102,12 +87,10 @@ class _LoginRedirectionState extends State<LoginRedirection> {
                 users: data?['users'],
                 date: data?['date']);
           }
-        } else {
-          throw Exception('Error handling firebase data');
         }
       }
       return maxChabbat;
     }
-    return null;
+    throw Exception('Error handling firebase data');
   }
 }
