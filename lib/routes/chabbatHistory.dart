@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:chabbat_pay/models/chabbat.dart';
 import 'package:chabbat_pay/services/database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -24,9 +27,10 @@ class ChabbatHistoryRoute extends StatelessWidget {
                 padding: const EdgeInsets.all(8),
                 itemCount: snapshot.data.length,
                 itemBuilder: (BuildContext context, int index) {
+                  ChabbatModel chabbat = snapshot.data[index];
                   return ListTile(
-                    title: Text(snapshot.data[index]),
-                    subtitle: const Text('sutitle'),
+                    title: Text(chabbat.name),
+                    subtitle: Text(chabbat.id),
                   );
                 });
           } else {

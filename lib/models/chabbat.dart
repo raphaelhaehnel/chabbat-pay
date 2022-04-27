@@ -17,4 +17,12 @@ class ChabbatModel {
     this.users = const {},
     required this.date,
   });
+
+  ChabbatModel.fromMap(Map<String, dynamic> chabbat, String chabbatId)
+      : id = chabbatId,
+        name = chabbat['name'],
+        open = chabbat['open'],
+        admin = chabbat['admin'],
+        users = chabbat['users'],
+        date = chabbat['date'];
 }
