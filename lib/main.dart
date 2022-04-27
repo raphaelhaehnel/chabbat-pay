@@ -44,7 +44,7 @@ class MyApp extends StatelessWidget {
 myAppTheme() {
   return ThemeData(
       brightness: Brightness.light,
-      primarySwatch: Colors.amber,
+      primarySwatch: Colors.blueGrey,
       fontFamily: 'Georgia');
 }
 

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -70,5 +71,45 @@ class DatabaseService {
 
   Future<DocumentSnapshot> getUserData() async {
     return await userCollection.doc(uid).get();
+  }
+
+  Future<List?> getChabbatsList() async {
+    DocumentSnapshot documentSnapshot = await getUserData();
+    if (documentSnapshot.exists) {
+      Map<String, dynamic> data =
+          documentSnapshot.data() as Map<String, dynamic>;
+      return data['chabbats'];
+    }
+    return null;
+  }
+
+  Future<List?> getChabbatsDetails() async {
+    List? chabbatsList = await getChabbatsList();
+
+    if (chabbatsList != null) {
+      print("AAAAAAAAAAAAAAAAAAAAAAA");
+      for (String chabbatId in chabbatsList) {
+        print("BBBBBBBBBBBBBBBBBBBBBBBBBBB");
+        DocumentSnapshot documentSnapshot =
+            await chabbatsCollection.doc(chabbatId).get();
+        if (documentSnapshot.exists) {
+          print("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCC");
+          Map<String, dynamic> chabbat =
+              documentSnapshot.data() as Map<String, dynamic>;
+          print("DDDDDDDDDDDDDDDDDDDDDDDD");
+          try {
+            //TODO: Can't convert Timestamp to Json
+            //TODO: return the json with all the fields of the chabbats
+            String chabbatJson = jsonEncode(chabbat);
+            print("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
+            print(chabbatJson);
+          } catch (e) {
+            print(e.toString());
+          }
+        }
+      }
+    }
+
+    return chabbatsList;
   }
 }
