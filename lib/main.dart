@@ -1,3 +1,4 @@
+import 'package:chabbat_pay/routes/chabbat.dart';
 import 'package:chabbat_pay/routes/chabbatHistory.dart';
 import 'package:chabbat_pay/routes/joinChabbat.dart';
 import 'package:chabbat_pay/routes/loginRedirection.dart';
@@ -34,6 +35,7 @@ class MyApp extends StatelessWidget {
             '/profile/history': (context) => ChabbatHistoryRoute(),
             '/home/new': (context) => NewChabatRoute(),
             '/home/join': (context) => JoinChabatRoute(),
+            '/chabbat': (context) => RouteChabbat(),
           },
           theme: myAppTheme()),
     );
@@ -115,7 +117,7 @@ class LoginScreen extends StatelessWidget {
       onSignup: _signupUser,
       onSubmitAnimationCompleted: () {
         Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (context) => LoginRedirection(), //RouteHome(),
+          builder: (context) => LoginRedirection(),
         ));
       },
       onRecoverPassword: _recoverPassword,

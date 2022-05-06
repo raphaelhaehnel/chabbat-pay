@@ -28,9 +28,31 @@ class ChabbatHistoryRoute extends StatelessWidget {
                 itemCount: snapshot.data.length,
                 itemBuilder: (BuildContext context, int index) {
                   ChabbatModel chabbat = snapshot.data[index];
-                  return ListTile(
-                    title: Text(chabbat.name),
-                    subtitle: Text(chabbat.id),
+
+                  return Card(
+                    child: ListTile(
+                      title: Text(chabbat.name),
+                      subtitle: Text(chabbat.id),
+                      trailing: chabbat.open
+                          ? const Icon(
+                              Icons.lock_open,
+                              color: Colors.green,
+                            )
+                          : const Icon(
+                              Icons.lock,
+                              color: Colors.red,
+                            ),
+                      tileColor:
+                          chabbat.open ? Colors.green[100] : Colors.red[100],
+                      onLongPress: () {},
+                      onTap: () {
+                        Navigator.pushNamed(
+                          context,
+                          '/chabbat',
+                          arguments: {"chabbat": chabbat, "menu": false},
+                        );
+                      },
+                    ),
                   );
                 });
           } else {

@@ -8,15 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:chabbat_pay/models/chabbat.dart';
 
-class LoginRedirection extends StatefulWidget {
-  const LoginRedirection({Key? key}) : super(key: key);
-
-  @override
-  State<LoginRedirection> createState() => _LoginRedirectionState();
-}
-
-class _LoginRedirectionState extends State<LoginRedirection> {
-  ChabbatModel? _chabbat = null;
+class LoginRedirection extends StatelessWidget {
+  LoginRedirection({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -25,18 +18,20 @@ class _LoginRedirectionState extends State<LoginRedirection> {
     // We need to get the user data that correspond to the uid, and check if
     // there is an opened chabbat in the list of chabbats
 
-    if (_chabbat == null) {
-      getLastChabbat(_user).then((val) => setState(() {
-            _chabbat = val;
-          }));
-      return const Center(
-        child: CircularProgressIndicator(),
-      );
-    } else if (_chabbat!.date == Timestamp(0, 0)) {
-      return RouteHome();
-    } else {
-      return RouteChabbat();
-    }
+    getLastChabbat(_user).then((chabbat) {
+      if (chabbat.date == Timestamp(0, 0)) {
+        Navigator.pushReplacementNamed(context, '/home');
+      } else {
+        Navigator.pushReplacementNamed(
+          context,
+          '/chabbat',
+          arguments: {"chabbat": chabbat, "menu": true},
+        );
+      }
+    });
+    return const Center(
+      child: CircularProgressIndicator(),
+    );
   }
 
   Future getLastChabbat(_user) async {
