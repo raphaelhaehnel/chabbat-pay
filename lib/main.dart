@@ -50,11 +50,6 @@ myAppTheme() {
       fontFamily: 'Georgia');
 }
 
-const users = const {
-  'raphael@gmail.com': '12345',
-  'hunter@gmail.com': 'hunter',
-};
-
 class LoginScreen extends StatelessWidget {
   Duration get loginTime => Duration(milliseconds: 100);
 
@@ -101,7 +96,7 @@ class LoginScreen extends StatelessWidget {
   Future<String?> _recoverPassword(String name) {
     debugPrint('Name: $name');
     return Future.delayed(loginTime).then((_) {
-      if (!users.containsKey(name)) {
+      if (true) {
         return 'User not exists';
       }
       return null;

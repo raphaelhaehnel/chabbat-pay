@@ -5,8 +5,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../components/menu.dart';
-import '../components/listItems.dart';
-import 'package:chabbat_pay/items/student.dart';
 import 'package:mongo_dart/mongo_dart.dart' show Db, DbCollection;
 
 //
@@ -26,8 +24,6 @@ class _RouteHomeState extends State<RouteHome> {
   // String containing the name of the user, from the text input
   String test = "null";
 
-  // The list of items that we'll build from the ModalRoute
-  List<Student> listItems = [];
 
   // Controller to clear the text field
   final fieldText = TextEditingController();
@@ -54,9 +50,6 @@ class _RouteHomeState extends State<RouteHome> {
   @override
   Widget build(BuildContext context) {
     // Load data if already exist
-    if (ModalRoute.of(context)!.settings.arguments != null) {
-      listItems = ModalRoute.of(context)!.settings.arguments as List<Student>;
-    }
 
     // Load the authenticated user from the provider
     User? _user = Provider.of<User?>(context);
