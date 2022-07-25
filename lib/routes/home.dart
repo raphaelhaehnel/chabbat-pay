@@ -1,4 +1,5 @@
 import 'package:chabbat_pay/services/auth.dart';
+import 'package:chabbat_pay/services/database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -23,7 +24,6 @@ class _RouteHomeState extends State<RouteHome> {
 
   // String containing the name of the user, from the text input
   String test = "null";
-
 
   // Controller to clear the text field
   final fieldText = TextEditingController();
@@ -77,8 +77,26 @@ class _RouteHomeState extends State<RouteHome> {
               padding: const EdgeInsets.all(8.0),
               child: Container(
                 child: ElevatedButton(
-                  onPressed: () => {},
-                  child: const Text('Opened chabbats'),
+                  onPressed: () {
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        content: Text("Loading last chabbat...")));
+                    DatabaseService(uid: _user!.uid)
+                        .getLastChabbat(_user)
+                        .then((chabbat) {
+                      if (chabbat.date == Timestamp(0, 0)) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text("Cannot display last chabbat")));
+                      } else {
+                        Navigator.pushReplacementNamed(
+                          context,
+                          '/chabbat',
+                          arguments: {"chabbat": chabbat, "menu": true},
+                        );
+                      }
+                    });
+                  },
+                  child: const Text('Current chabbat'),
                 ),
                 width: 180,
               ),

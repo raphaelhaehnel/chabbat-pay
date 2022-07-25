@@ -68,11 +68,11 @@ class _RouteChabbatState extends State<RouteChabbat> {
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
-            label: 'Home',
+            label: 'Overview',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.business),
-            label: 'Business',
+            label: 'Transactions',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.school),
@@ -95,15 +95,28 @@ class TabOverview extends StatelessWidget {
     final args = ModalRoute.of(context)!.settings.arguments as Map;
     ChabbatModel _chabbat = args["chabbat"];
 
-    return Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Center(
-          child: Column(
-            children: [
-              Text('${_chabbat.users}'),
-            ],
+    return Center(
+      child: Column(
+        children: [
+          const Text("Participants"),
+          Expanded(
+            child: SizedBox(
+              height: 200.0,
+              child: ListView.builder(
+                itemCount: _chabbat.users.length,
+                itemBuilder: (context, index) {
+                  return Card(
+                    child: ListTile(
+                      title: Text(_chabbat.users.keys.elementAt(index)),
+                    ),
+                  );
+                },
+              ),
+            ),
           ),
-        ));
+        ],
+      ),
+    );
   }
 }
 
