@@ -96,7 +96,7 @@ class _RouteHomeState extends State<RouteHome> {
                       }
                     });
                   },
-                  child: const Text('Current chabbat'),
+                  child: const Text('Last chabbat'),
                 ),
                 width: 180,
               ),

@@ -6,6 +6,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:chabbat_pay/routes/tabs/overview.dart';
+import 'package:chabbat_pay/routes/tabs/transactions.dart';
 
 class RouteChabbat extends StatefulWidget {
   RouteChabbat({Key? key}) : super(key: key);
@@ -84,58 +86,5 @@ class _RouteChabbatState extends State<RouteChabbat> {
         onTap: _onItemTapped,
       ),
     );
-  }
-}
-
-class TabOverview extends StatelessWidget {
-  const TabOverview({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final args = ModalRoute.of(context)!.settings.arguments as Map;
-    ChabbatModel _chabbat = args["chabbat"];
-
-    return Center(
-      child: Column(
-        children: [
-          const Text("Participants"),
-          Expanded(
-            child: SizedBox(
-              height: 200.0,
-              child: ListView.builder(
-                itemCount: _chabbat.users.length,
-                itemBuilder: (context, index) {
-                  return Card(
-                    child: ListTile(
-                      title: Text(_chabbat.users.keys.elementAt(index)),
-                    ),
-                  );
-                },
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class TabTransactions extends StatelessWidget {
-  const TabTransactions({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final args = ModalRoute.of(context)!.settings.arguments as Map;
-    ChabbatModel _chabbat = args["chabbat"];
-
-    return Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Center(
-          child: Column(
-            children: [
-              Text('${_chabbat.open}'),
-            ],
-          ),
-        ));
   }
 }

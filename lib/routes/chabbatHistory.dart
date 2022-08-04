@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:chabbat_pay/models/chabbat.dart';
 import 'package:chabbat_pay/services/database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

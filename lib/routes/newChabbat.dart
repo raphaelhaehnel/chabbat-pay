@@ -16,6 +16,7 @@ class _NewChabatRouteState extends State<NewChabatRoute> {
     User? _user = Provider.of<User?>(context);
 
     final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+    bool isButtonDisabled = false;
 
     String? _chabbatName;
 
@@ -40,7 +41,7 @@ class _NewChabatRouteState extends State<NewChabatRoute> {
                     }
                     return null;
                   },
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     border: UnderlineInputBorder(),
                     labelText: 'Chabbat name',
                   ),
@@ -50,16 +51,22 @@ class _NewChabatRouteState extends State<NewChabatRoute> {
                   child: ElevatedButton(
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
-                          String chabbat_id =
-                              await DatabaseService(uid: _user!.uid)
-                                  .createChabbatData(_chabbatName!);
-                          Navigator.pop(context);
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              content: Text(
-                                  'Chabbat $_chabbatName created ! ID: $chabbat_id')));
+                          if (!isButtonDisabled) {
+                            setState(() => isButtonDisabled = true);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text('Processing...')));
+
+                            String chabbatId =
+                                await DatabaseService(uid: _user!.uid)
+                                    .createChabbatData(_chabbatName!);
+                            Navigator.pop(context);
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                content: Text(
+                                    'Chabbat $_chabbatName created ! ID: $chabbatId')));
+                          }
                         }
                       },
-                      child: const Text('OK')),
+                      child: const Text('Ok')),
                 ),
               ],
             ),

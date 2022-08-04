@@ -1,8 +1,12 @@
 import 'dart:convert';
 import 'dart:math';
 import 'package:chabbat_pay/models/chabbat.dart';
+import 'package:chabbat_pay/models/transaction.dart';
+import 'package:chabbat_pay/models/user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:chabbat_pay/models/checker_join.dart';
 
 generate_id(int n) {
   var random = Random();
@@ -46,27 +50,49 @@ class DatabaseService {
       'date': Timestamp.now(),
       'admin': uid,
       'open': true,
-      'users': {'unStringID': 555},
+      'users': <String>[uid],
+      'transactions': <TransactionModel>[],
     });
 
     addChabbatToUser(chabbatId);
     return chabbatId;
   }
 
-  Future addChabbatToUser(String chabbatId) async {
+  Future<Checker> addUserToChabbat(String chabbatId) async {
+    DocumentSnapshot documentSnapshot =
+        await chabbatsCollection.doc(chabbatId).get();
+    if (documentSnapshot.exists) {
+      Map<String, dynamic>? data =
+          documentSnapshot.data() as Map<String, dynamic>;
+      List users = data['users'];
+      if (users.contains(uid)) {
+        return Checker.userExists;
+      }
+      users.add(uid);
+      await chabbatsCollection.doc(chabbatId).update({'users': users});
+      return Checker.done;
+    } else {
+      return Checker.idNotExists;
+    }
+  }
+
+  Future<Checker> addChabbatToUser(String chabbatId) async {
     DocumentSnapshot documentSnapshot = await userCollection.doc(uid).get();
     if (documentSnapshot.exists) {
       // 1- Retrive the old list of chabbats (DONE)
       Map<String, dynamic>? data =
           documentSnapshot.data() as Map<String, dynamic>;
       List chabbats = data['chabbats'];
-
+      if (chabbats.contains(chabbatId)) {
+        return Checker.chabbatExists;
+      }
       // 2- Retrive the id of the new created chabbat (DONE)
       // 3- Add the id to the list of chabbats
       chabbats.add(chabbatId);
       await userCollection.doc(uid).update({'chabbats': chabbats});
+      return Checker.done;
     } else {
-      print('PROBLEM !!');
+      return Checker.userNotExists;
     }
   }
 
@@ -86,21 +112,21 @@ class DatabaseService {
 
   Future<List<ChabbatModel>> getChabbatsDetails() async {
     List chabbatsList = await getChabbatsList();
-
     List<ChabbatModel> chabbatDetailedList = [];
 
     for (String chabbatId in chabbatsList) {
       DocumentSnapshot documentSnapshot =
           await chabbatsCollection.doc(chabbatId).get();
+
       if (documentSnapshot.exists) {
         Map<String, dynamic> chabbat =
             documentSnapshot.data() as Map<String, dynamic>;
 
         ChabbatModel chabbatObject = ChabbatModel.fromMap(chabbat, chabbatId);
+
         chabbatDetailedList.add(chabbatObject);
       }
     }
-
     return chabbatDetailedList;
   }
 
@@ -144,13 +170,7 @@ class DatabaseService {
           if (date.compareTo(maxDate) > 0 && open) {
             maxDate = date;
 
-            maxChabbat = ChabbatModel(
-                id: chabbatID,
-                name: data?['name'],
-                open: data?['open'],
-                admin: data?['admin'],
-                users: data?['users'],
-                date: data?['date']);
+            maxChabbat = ChabbatModel.fromMap(data!, chabbatID);
           }
         }
       }
