@@ -1,9 +1,7 @@
 import 'package:chabbat_pay/components/menu.dart';
 import 'package:chabbat_pay/models/chabbat.dart';
 import 'package:chabbat_pay/services/auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:chabbat_pay/routes/tabs/overview.dart';
@@ -19,16 +17,12 @@ class RouteChabbat extends StatefulWidget {
 class _RouteChabbatState extends State<RouteChabbat> {
   final AuthService _auth = AuthService();
 
-  CollectionReference chabbatsCollection =
-      FirebaseFirestore.instanceFor(app: Firebase.app('myFirebase'))
-          .collection('chabbats');
-
   int _selectedIndex = 0;
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   final List<Widget> _widgetOptions = <Widget>[
     const TabOverview(),
-    const TabTransactions(),
+    TabTransactions(null),
     const Text(
       'Index 2: School',
       style: optionStyle,
@@ -46,10 +40,19 @@ class _RouteChabbatState extends State<RouteChabbat> {
     // Load the authenticated user from the provider
     User? _user = Provider.of<User?>(context);
 
+    if (ModalRoute.of(context)!.settings.arguments == null) {
+      Navigator.pushNamed(
+        context,
+        '/home',
+      );
+      return const Scaffold();
+    }
+
     final args = ModalRoute.of(context)!.settings.arguments as Map;
     ChabbatModel _chabbat = args["chabbat"];
     bool _menu = args["menu"];
 
+    // TODO: Pas besoin de ca
     return Scaffold(
       appBar: AppBar(
         title: Text('Chabbat ${_chabbat.name}'),
@@ -85,6 +88,22 @@ class _RouteChabbatState extends State<RouteChabbat> {
         selectedItemColor: Colors.amber[800],
         onTap: _onItemTapped,
       ),
+      floatingActionButton: _selectedIndex == 1
+          ? FloatingActionButton(
+              onPressed: () async {
+                final result = await Navigator.pushNamed(
+                  context,
+                  '/chabbat/new_transaction',
+                  arguments: {"chabbat": _chabbat, "menu": false},
+                ) as ChabbatModel;
+
+                setState(() {
+                  _widgetOptions[1] = TabTransactions(result);
+                });
+              },
+              child: const Icon(Icons.add),
+            )
+          : null,
     );
   }
 }

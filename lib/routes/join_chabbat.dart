@@ -5,14 +5,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class JoinChabatRoute extends StatefulWidget {
-  JoinChabatRoute({Key? key}) : super(key: key);
+class RouteJoinChabat extends StatefulWidget {
+  RouteJoinChabat({Key? key}) : super(key: key);
 
   @override
-  State<JoinChabatRoute> createState() => _JoinChabatRouteState();
+  State<RouteJoinChabat> createState() => _RouteJoinChabatState();
 }
 
-class _JoinChabatRouteState extends State<JoinChabatRoute> {
+class _RouteJoinChabatState extends State<RouteJoinChabat> {
   displaySnackbar(String popupText) {
     ScaffoldMessenger.of(context)
         .showSnackBar(SnackBar(content: Text(popupText)));
@@ -38,12 +38,12 @@ class _JoinChabatRouteState extends State<JoinChabatRoute> {
               children: [
                 TextFormField(
                   validator: (value) {
-                    setState(() {
-                      _chabbatId = value;
-                    });
                     if (value == null || value.isEmpty) {
                       return 'Please enter a chabbat ID';
                     }
+                    setState(() {
+                      _chabbatId = value;
+                    });
                     return null;
                   },
                   decoration: const InputDecoration(
@@ -78,8 +78,16 @@ class _JoinChabatRouteState extends State<JoinChabatRoute> {
 
                           if (result2 == Checker.done &&
                               result1 == Checker.done) {
-                            Navigator.pop(context);
                             displaySnackbar("Chabbat added !");
+                            Navigator.pushReplacementNamed(
+                              context,
+                              '/chabbat',
+                              arguments: {
+                                "chabbat": await databaseService
+                                    .getChabbat(_chabbatId!),
+                                "menu": true
+                              },
+                            );
                             return;
                           }
 

@@ -31,4 +31,9 @@ class ChabbatModel {
         transactions = (chabbat['transactions'] as List)
             .map((transaction) => TransactionModel.fromMap(transaction))
             .toList();
+
+  ChabbatModel addTransaction(TransactionModel transaction) {
+    transactions.add(transaction);
+    return this;
+  }
 }

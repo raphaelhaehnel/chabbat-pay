@@ -3,14 +3,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class NewChabatRoute extends StatefulWidget {
-  const NewChabatRoute({Key? key}) : super(key: key);
+class RouteNewChabat extends StatefulWidget {
+  const RouteNewChabat({Key? key}) : super(key: key);
 
   @override
-  State<NewChabatRoute> createState() => _NewChabatRouteState();
+  State<RouteNewChabat> createState() => _RouteNewChabatState();
 }
 
-class _NewChabatRouteState extends State<NewChabatRoute> {
+class _RouteNewChabatState extends State<RouteNewChabat> {
   @override
   Widget build(BuildContext context) {
     User? _user = Provider.of<User?>(context);
@@ -33,12 +33,12 @@ class _NewChabatRouteState extends State<NewChabatRoute> {
               children: [
                 TextFormField(
                   validator: (value) {
-                    setState(() {
-                      _chabbatName = value;
-                    });
                     if (value == null || value.isEmpty) {
                       return 'Please enter some text';
                     }
+                    setState(() {
+                      _chabbatName = value;
+                    });
                     return null;
                   },
                   decoration: const InputDecoration(

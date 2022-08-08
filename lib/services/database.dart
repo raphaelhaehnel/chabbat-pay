@@ -58,6 +58,39 @@ class DatabaseService {
     return chabbatId;
   }
 
+  Future<ChabbatModel> getChabbat(String chabbatId) async {
+    DocumentSnapshot documentSnapshot =
+        await chabbatsCollection.doc(chabbatId).get();
+    if (documentSnapshot.exists) {
+      Map<String, dynamic>? data =
+          documentSnapshot.data() as Map<String, dynamic>;
+      ChabbatModel chabbat = ChabbatModel.fromMap(data, chabbatId);
+      return chabbat;
+    } else {
+      throw Exception("No chabbatId corresponding");
+    }
+  }
+
+  Future<Checker> addTransactionToChabbat(
+      String chabbatId, TransactionModel transaction) async {
+    DocumentSnapshot documentSnapshot =
+        await chabbatsCollection.doc(chabbatId).get();
+    if (documentSnapshot.exists) {
+      ChabbatModel chabbat = ChabbatModel.fromMap(
+          documentSnapshot.data() as Map<String, dynamic>, chabbatId);
+
+      List<TransactionModel> transactions = chabbat.transactions;
+
+      transactions.add(transaction);
+      await chabbatsCollection.doc(chabbatId).update(
+          {'transactions': transactions.map((elmt) => elmt.toMap()).toList()});
+
+      return Checker.done;
+    } else {
+      return Checker.idNotExists;
+    }
+  }
+
   Future<Checker> addUserToChabbat(String chabbatId) async {
     DocumentSnapshot documentSnapshot =
         await chabbatsCollection.doc(chabbatId).get();
@@ -130,7 +163,7 @@ class DatabaseService {
     return chabbatDetailedList;
   }
 
-  Future getLastChabbat(_user) async {
+  Future<ChabbatModel> getLastChabbat(_user) async {
     // Get the users from the database
     var collectionUsers =
         FirebaseFirestore.instanceFor(app: Firebase.app('myFirebase'))

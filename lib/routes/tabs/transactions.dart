@@ -2,12 +2,20 @@ import 'package:chabbat_pay/models/chabbat.dart';
 import 'package:flutter/material.dart';
 
 class TabTransactions extends StatelessWidget {
-  const TabTransactions({Key? key}) : super(key: key);
+  ChabbatModel? chabbatResult;
+
+  TabTransactions(ChabbatModel? chabbatResult, {Key? key}) : super(key: key) {
+    this.chabbatResult = chabbatResult;
+  }
 
   @override
   Widget build(BuildContext context) {
     final args = ModalRoute.of(context)!.settings.arguments as Map;
     ChabbatModel _chabbat = args["chabbat"];
+
+    if (chabbatResult != null) {
+      _chabbat = chabbatResult!;
+    }
 
     return Center(
       child: Column(

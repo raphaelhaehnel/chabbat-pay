@@ -1,9 +1,9 @@
 import 'package:chabbat_pay/routes/chabbat.dart';
-import 'package:chabbat_pay/routes/chabbatHistory.dart';
-import 'package:chabbat_pay/routes/joinChabbat.dart';
-import 'package:chabbat_pay/routes/loginRedirection.dart';
-import 'package:chabbat_pay/routes/newChabbat.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:chabbat_pay/routes/chabbat_history.dart';
+import 'package:chabbat_pay/routes/join_chabbat.dart';
+import 'package:chabbat_pay/routes/login_redirection.dart';
+import 'package:chabbat_pay/routes/new_chabbat.dart';
+import 'package:chabbat_pay/routes/new_transaction.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -11,18 +11,21 @@ import './routes/home.dart';
 import './routes/profile.dart';
 import 'package:flutter_login/flutter_login.dart';
 import './services/auth.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 void main() async {
+  await dotenv.load(fileName: ".env");
   await initializeDefault();
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  MyApp({Key? key}) : super(key: key) {}
+  MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return StreamProvider.value(
+      // Initialize the AuthService
       value: AuthService().user,
       initialData: null,
       child: MaterialApp(
@@ -32,10 +35,12 @@ class MyApp extends StatelessWidget {
             '/': (context) => LoginScreen(),
             '/home': (context) => const RouteHome(),
             '/profile': (context) => RouteProfile(),
-            '/profile/history': (context) => ChabbatHistoryRoute(),
-            '/home/new': (context) => NewChabatRoute(),
-            '/home/join': (context) => JoinChabatRoute(),
+            '/profile/history': (context) => RouteChabbatHistory(),
+            '/home/new': (context) => RouteNewChabat(),
+            '/home/join': (context) => RouteJoinChabat(),
             '/chabbat': (context) => RouteChabbat(),
+            '/chabbat/new_transaction': (context) => RouteNewTransaction(),
+            '/login_redirection': (context) => LoginRedirection(),
           },
           theme: myAppTheme()),
     );
@@ -56,38 +61,20 @@ class LoginScreen extends StatelessWidget {
   final AuthService _auth = AuthService();
 
   Future<String?> _authUser(LoginData data) async {
-    // debugPrint('Name: ${data.name}, Password: ${data.password}');
-    // return Future.delayed(loginTime).then((_) {
-    //   if (!users.containsKey(data.name)) {
-    //     return 'User not exists';
-    //   }
-    //   if (users[data.name] != data.password) {
-    //     return 'Password does not match';
-    //   }
-    //   return null;
-    // });
     dynamic result = await _auth.signInEmail(data.name, data.password);
     if (result == null) {
-      return result.toString();
+      return "The password is invalid or the user does not have a password";
     } else {
-      print('User id: ${result.uid}');
-
       // Return null to validate authentication
       return null;
     }
   }
 
   Future<String?> _signupUser(SignupData data) async {
-    // debugPrint('Signup Name: ${data.name}, Password: ${data.password}');
-    // return Future.delayed(loginTime).then((_) {
-    //   return null;
-    // });
     dynamic result = await _auth.signUpEmail(data.name, data.password);
     if (result == null) {
       return result.toString();
     } else {
-      print('User id: ${result.uid}');
-
       // Return null to validate authentication
       return null;
     }
@@ -107,13 +94,14 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return FlutterLogin(
       title: 'PayYourChabess!',
-      logo: AssetImage('images/logo-transparent.png'),
+      logo: const AssetImage('images/logo-transparent.png'),
       onLogin: _authUser,
       onSignup: _signupUser,
       onSubmitAnimationCompleted: () {
-        Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (context) => LoginRedirection(),
-        ));
+        Navigator.pushReplacementNamed(
+          context,
+          '/login_redirection',
+        );
       },
       onRecoverPassword: _recoverPassword,
     );
@@ -128,8 +116,8 @@ Future<void> initializeDefault() async {
 }
 
 // Authentification parameters of Firebase
-FirebaseOptions get firebaseOptions => const FirebaseOptions(
-    apiKey: "AIzaSyD9bvtsRsrmwgi9RuVy9ynCzCvYFd9D-jU",
+FirebaseOptions get firebaseOptions => FirebaseOptions(
+    apiKey: dotenv.env['API_KEY']!,
     authDomain: "payetonchabbat-1570735814576.firebaseapp.com",
     projectId: "payetonchabbat-1570735814576",
     storageBucket: "payetonchabbat-1570735814576.appspot.com",

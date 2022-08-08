@@ -4,14 +4,14 @@ class TransactionModel {
   final String name;
   final String user;
   final String image;
-  final int cost;
+  final double cost;
   final Timestamp date;
 
   TransactionModel({
-    this.name = 'UNDEFINED',
-    this.user = 'UNDEFINED',
-    this.image = 'UNDEFINED',
-    this.cost = -1,
+    required this.name,
+    required this.user,
+    required this.image,
+    required this.cost,
     required this.date,
   });
 
@@ -21,4 +21,14 @@ class TransactionModel {
         image = transaction['image'],
         cost = transaction['cost'],
         date = transaction['date'];
+
+  toMap() {
+    return {
+      'name': name,
+      'user': user,
+      'image': image,
+      'cost': cost,
+      'date': date,
+    };
+  }
 }

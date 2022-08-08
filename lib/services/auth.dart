@@ -8,6 +8,7 @@ class AuthService {
 
   Stream<User?> get user {
     return _auth.authStateChanges();
+    ;
   }
 
   // sin in anonymously

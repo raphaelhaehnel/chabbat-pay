@@ -1,10 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
 
-class myButton extends StatelessWidget {
-  const myButton({Key? key}) : super(key: key);
+class MyButton extends StatelessWidget {
+  const MyButton({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +33,7 @@ class myButton extends StatelessWidget {
 class FirebaseData extends StatelessWidget {
   const FirebaseData({Key? key}) : super(key: key);
 
-  updateData(DocumentSnapshot item) {
+  Future updateData(DocumentSnapshot item) async {
     // We run a transaction so the update takes place only after the information is updated on the server.
     FirebaseFirestore.instanceFor(app: Firebase.app('myFirebase'))
         .runTransaction((transaction) async {
