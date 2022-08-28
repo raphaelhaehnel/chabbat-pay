@@ -16,11 +16,11 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 void main() async {
   await dotenv.load(fileName: ".env");
   await initializeDefault();
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  MyApp({Key? key}) : super(key: key);
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -35,11 +35,12 @@ class MyApp extends StatelessWidget {
             '/': (context) => LoginScreen(),
             '/home': (context) => const RouteHome(),
             '/profile': (context) => RouteProfile(),
-            '/profile/history': (context) => RouteChabbatHistory(),
-            '/home/new': (context) => RouteNewChabat(),
+            '/profile/history': (context) => const RouteChabbatHistory(),
+            '/home/new': (context) => const RouteNewChabat(),
             '/home/join': (context) => RouteJoinChabat(),
-            '/chabbat': (context) => RouteChabbat(),
-            '/chabbat/new_transaction': (context) => RouteNewTransaction(),
+            '/chabbat': (context) => const RouteChabbat(),
+            '/chabbat/new_transaction': (context) =>
+                const RouteNewTransaction(),
             '/login_redirection': (context) => LoginRedirection(),
           },
           theme: myAppTheme()),
@@ -56,6 +57,8 @@ myAppTheme() {
 }
 
 class LoginScreen extends StatelessWidget {
+  LoginScreen({Key? key}) : super(key: key);
+
   Duration get loginTime => Duration(milliseconds: 100);
 
   final AuthService _auth = AuthService();
@@ -94,7 +97,7 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return FlutterLogin(
       title: 'PayYourChabess!',
-      logo: const AssetImage('images/logo-transparent.png'),
+      logo: 'assets/images/logo-transparent.png',
       onLogin: _authUser,
       onSignup: _signupUser,
       onSubmitAnimationCompleted: () {

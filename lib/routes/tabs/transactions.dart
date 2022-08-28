@@ -1,17 +1,18 @@
 import 'package:chabbat_pay/models/chabbat.dart';
+import 'package:chabbat_pay/utilities/id_to_user.dart';
 import 'package:flutter/material.dart';
+
+import '../../models/args/chabbat.dart';
 
 class TabTransactions extends StatelessWidget {
   ChabbatModel? chabbatResult;
 
-  TabTransactions(ChabbatModel? chabbatResult, {Key? key}) : super(key: key) {
-    this.chabbatResult = chabbatResult;
-  }
+  TabTransactions(this.chabbatResult, {Key? key});
 
   @override
   Widget build(BuildContext context) {
-    final args = ModalRoute.of(context)!.settings.arguments as Map;
-    ChabbatModel _chabbat = args["chabbat"];
+    final args = ModalRoute.of(context)!.settings.arguments as ArgsChabbat;
+    ChabbatModel _chabbat = args.chabbat;
 
     if (chabbatResult != null) {
       _chabbat = chabbatResult!;
@@ -32,7 +33,8 @@ class TabTransactions extends StatelessWidget {
                       leading:
                           Text(_chabbat.transactions[index].cost.toString()),
                       title: Text(_chabbat.transactions[index].name),
-                      subtitle: Text(_chabbat.transactions[index].user),
+                      subtitle: Text(id_to_name(
+                          _chabbat.transactions[index].user, context)),
                       trailing: IconButton(
                         icon: const Icon(Icons.description_outlined),
                         onPressed: () {

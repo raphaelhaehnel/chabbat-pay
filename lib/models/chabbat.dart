@@ -6,7 +6,7 @@ class ChabbatModel {
   final String name;
   final bool open;
   final String admin;
-  final List<String> users;
+  final List<String> usersId;
   final Timestamp date;
   final List<TransactionModel> transactions;
 
@@ -15,7 +15,7 @@ class ChabbatModel {
     this.name = 'UNDEFINED',
     this.open = false,
     this.admin = 'UNDEFINED',
-    this.users = const <String>[],
+    this.usersId = const <String>[],
     required this.date,
     this.transactions = const <TransactionModel>[],
   });
@@ -25,7 +25,7 @@ class ChabbatModel {
         name = chabbat['name'],
         open = chabbat['open'],
         admin = chabbat['admin'],
-        users =
+        usersId =
             (chabbat['users'] as List).map((user) => user as String).toList(),
         date = chabbat['date'],
         transactions = (chabbat['transactions'] as List)

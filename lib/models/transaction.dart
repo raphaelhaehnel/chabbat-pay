@@ -19,7 +19,9 @@ class TransactionModel {
       : name = transaction['name'],
         user = transaction['user'],
         image = transaction['image'],
-        cost = transaction['cost'],
+        cost = (transaction['cost'] is int)
+            ? (transaction['cost'] as int).toDouble()
+            : transaction['cost'],
         date = transaction['date'];
 
   toMap() {

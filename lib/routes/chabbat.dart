@@ -1,14 +1,17 @@
 import 'package:chabbat_pay/components/menu.dart';
+import 'package:chabbat_pay/models/args/chabbat.dart';
 import 'package:chabbat_pay/models/chabbat.dart';
+import 'package:chabbat_pay/routes/tabs/balance.dart';
 import 'package:chabbat_pay/services/auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 import 'package:chabbat_pay/routes/tabs/overview.dart';
 import 'package:chabbat_pay/routes/tabs/transactions.dart';
 
 class RouteChabbat extends StatefulWidget {
-  RouteChabbat({Key? key}) : super(key: key);
+  const RouteChabbat({Key? key}) : super(key: key);
 
   @override
   State<RouteChabbat> createState() => _RouteChabbatState();
@@ -23,10 +26,7 @@ class _RouteChabbatState extends State<RouteChabbat> {
   final List<Widget> _widgetOptions = <Widget>[
     const TabOverview(),
     TabTransactions(null),
-    const Text(
-      'Index 2: School',
-      style: optionStyle,
-    ),
+    const TabBalance(),
   ];
 
   void _onItemTapped(int index) {
@@ -41,16 +41,21 @@ class _RouteChabbatState extends State<RouteChabbat> {
     User? _user = Provider.of<User?>(context);
 
     if (ModalRoute.of(context)!.settings.arguments == null) {
-      Navigator.pushNamed(
-        context,
-        '/home',
+      SchedulerBinding.instance.addPostFrameCallback((_) async {
+        Navigator.pushReplacementNamed(
+          context,
+          '/home',
+        );
+      });
+      return const Center(
+        child: CircularProgressIndicator(),
       );
-      return const Scaffold();
     }
+    final args = ModalRoute.of(context)!.settings.arguments as ArgsChabbat;
 
-    final args = ModalRoute.of(context)!.settings.arguments as Map;
-    ChabbatModel _chabbat = args["chabbat"];
-    bool _menu = args["menu"];
+    ChabbatModel _chabbat = args.chabbat;
+    Map<String, String> _users = args.users;
+    bool _menu = args.menu;
 
     // TODO: Pas besoin de ca
     return Scaffold(
@@ -76,12 +81,12 @@ class _RouteChabbatState extends State<RouteChabbat> {
             label: 'Overview',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.business),
+            icon: Icon(Icons.attach_money),
             label: 'Transactions',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.school),
-            label: 'School',
+            icon: Icon(Icons.account_balance),
+            label: 'Balance',
           ),
         ],
         currentIndex: _selectedIndex,
@@ -101,7 +106,7 @@ class _RouteChabbatState extends State<RouteChabbat> {
                   _widgetOptions[1] = TabTransactions(result);
                 });
               },
-              child: const Icon(Icons.add),
+              child: const Icon(Icons.add_shopping_cart),
             )
           : null,
     );

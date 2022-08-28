@@ -1,6 +1,6 @@
+import 'package:chabbat_pay/models/args/chabbat.dart';
 import 'package:chabbat_pay/models/chabbat.dart';
 import 'package:chabbat_pay/services/database.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -43,11 +43,15 @@ class RouteChabbatHistory extends StatelessWidget {
                       tileColor:
                           chabbat.open ? Colors.green[100] : Colors.red[100],
                       onLongPress: () {},
-                      onTap: () {
-                        Navigator.pushNamed(
+                      onTap: () async {
+                        Navigator.pushReplacementNamed(
                           context,
                           '/chabbat',
-                          arguments: {"chabbat": chabbat, "menu": false},
+                          arguments: ArgsChabbat(
+                              chabbat: chabbat,
+                              users: await DatabaseService(uid: _user.uid)
+                                  .getAllUsers(),
+                              menu: true),
                         );
                       },
                     ),

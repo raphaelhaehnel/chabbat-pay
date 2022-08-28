@@ -1,14 +1,12 @@
-import 'dart:convert';
 import 'dart:math';
 import 'package:chabbat_pay/models/chabbat.dart';
 import 'package:chabbat_pay/models/transaction.dart';
 import 'package:chabbat_pay/models/user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:chabbat_pay/models/checker_join.dart';
 
-generate_id(int n) {
+generateId(int n) {
   var random = Random();
   String id = '';
   for (int i = 0; i < n; i++) {
@@ -42,7 +40,7 @@ class DatabaseService {
 
   /// Create a new chabbat
   Future createChabbatData(String name) async {
-    String chabbatId = generate_id(6);
+    String chabbatId = generateId(6);
 
     // TODO: we have to get the result of the future
     await chabbatsCollection.doc(chabbatId).set({
@@ -141,6 +139,18 @@ class DatabaseService {
       return data['chabbats'];
     }
     return [];
+  }
+
+  Future<Map<String, String>> getAllUsers() async {
+    QuerySnapshot myDocs = await userCollection.get();
+    // Iterable users = myDocs.docs.map((doc) => MapEntry(doc.id, doc["name"]));
+
+    Map<String, String> users = {
+      for (var item in myDocs.docs.map((doc) => MapEntry(doc.id, doc["name"])))
+        item.key: item.value
+    };
+
+    return users;
   }
 
   Future<List<ChabbatModel>> getChabbatsDetails() async {
