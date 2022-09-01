@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 class MenuApp extends StatelessWidget {
   const MenuApp({Key? key, this.arguments}) : super(key: key);
 
@@ -53,9 +52,18 @@ class MenuApp extends StatelessWidget {
                   }),
           ListTile(
               leading: const Icon(Icons.settings),
-              title: const Text('Settings'),
+              title: const Text('About'),
               onTap: () {
-                Navigator.pop(context);
+                showAboutDialog(
+                    context: context,
+                    applicationVersion: '1.0-alpha',
+                    applicationIcon: Image.asset(
+                      "assets/images/icon.png",
+                      height: 100,
+                      width: 100,
+                    ),
+                    applicationLegalese: 'Hello World',
+                    applicationName: "Chabbat Pay");
               }),
         ],
       ),
