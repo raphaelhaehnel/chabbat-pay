@@ -2,7 +2,10 @@
 
 A new Flutter project.
 
-## Getting Started
+## Version control
+
+1.0-alpha   first deployment of the application. Only main features are working.
+
 
 This project is a starting point for a Flutter application.
 
