@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:chabbat_pay/models/transaction.dart';
+import 'package:currency_picker/currency_picker.dart';
 
 class ChabbatModel {
   final String id;
@@ -9,6 +10,7 @@ class ChabbatModel {
   final List<String> usersId;
   final Timestamp date;
   final List<TransactionModel> transactions;
+  final Currency? currency;
 
   ChabbatModel({
     this.id = 'UNDEFINED',
@@ -18,6 +20,7 @@ class ChabbatModel {
     this.usersId = const <String>[],
     required this.date,
     this.transactions = const <TransactionModel>[],
+    this.currency,
   });
 
   ChabbatModel.fromMap(Map<String, dynamic> chabbat, String chabbatId)
@@ -30,7 +33,8 @@ class ChabbatModel {
         date = chabbat['date'],
         transactions = (chabbat['transactions'] as List)
             .map((transaction) => TransactionModel.fromMap(transaction))
-            .toList();
+            .toList(),
+        currency = CurrencyService().findByName(chabbat['currency']);
 
   ChabbatModel addTransaction(TransactionModel transaction) {
     transactions.add(transaction);

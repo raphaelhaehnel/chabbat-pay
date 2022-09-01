@@ -21,7 +21,6 @@ class TabTransactions extends StatelessWidget {
     return Center(
       child: Column(
         children: [
-          const Text("Participants"),
           Expanded(
             child: SizedBox(
               height: 200.0,
@@ -30,19 +29,21 @@ class TabTransactions extends StatelessWidget {
                 itemBuilder: (context, index) {
                   return Card(
                     child: ListTile(
-                      leading:
-                          Text(_chabbat.transactions[index].cost.toString()),
+                      leading: Text(
+                          "${_chabbat.transactions[index].cost.toString()} ${_chabbat.currency!.symbol}"),
                       title: Text(_chabbat.transactions[index].name),
-                      subtitle: Text(id_to_name(
-                          _chabbat.transactions[index].user, context)),
+                      subtitle: Text(
+                          idToName(_chabbat.transactions[index].user, context)),
                       trailing: IconButton(
                         icon: const Icon(Icons.description_outlined),
                         onPressed: () {
                           showDialog(
                               context: context,
                               builder: (context) => AlertDialog(
-                                  content: Image.asset(
-                                      'images/PXL_20220801_130155821.jpg')));
+                                    // To allow flutter to load images from network, don't forget to setup CORS configuration by using google-cloud-sdk
+                                    content: Image.network(
+                                        _chabbat.transactions[index].image),
+                                  ));
                         },
                       ),
                     ),

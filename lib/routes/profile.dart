@@ -16,10 +16,6 @@ class RouteProfile extends StatelessWidget {
 
     User? _user = Provider.of<User?>(context);
 
-    if (_user != null) {
-      _user.updateDisplayName('Jonathan').then((value) => null);
-    }
-
     return Scaffold(
       appBar: AppBar(
         title: const Text("Profile"),
@@ -65,6 +61,7 @@ class RouteProfile extends StatelessWidget {
     );
   }
 
+// TODO : this code don't have to be here ! Please use two databases: one for users and one for chabbats
   updateData(DocumentSnapshot item) {
     // We run a transaction so the update takes place only after the information is updated on the server.
     FirebaseFirestore.instanceFor(app: Firebase.app('myFirebase'))

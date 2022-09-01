@@ -26,35 +26,12 @@ class _RouteNewTransactionState extends State<RouteNewTransaction> {
   PlatformFile? _pickedfile;
   UploadTask? _uploadTask;
 
-  Future selectFile() async {
-    final result = await FilePicker.platform.pickFiles();
-    if (result == null) {
-      return;
-    }
-    setState(() {
-      _pickedfile = result.files.first;
-    });
-  }
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  bool isButtonDisabled = false;
 
-  Future<String> uploadFile() async {
-    // Define the name file for the FirebaseStorage
-    final path =
-        'files/${_pickedfile!.name}'; // TODO change name for each file (add user, date, and other)
-
-    // The file stored as a byte file
-    Uint8List file = _pickedfile!.bytes!;
-
-    // The directory of the destination
-    final ref = FirebaseStorage.instanceFor(app: Firebase.app('myFirebase'))
-        .ref()
-        .child(path);
-
-    _uploadTask = ref.putData(file);
-
-    final snapshot = await _uploadTask!.whenComplete(() {});
-
-    return await snapshot.ref.getDownloadURL();
-  }
+  final _transactionName = TextEditingController();
+  final _transactionPrice = TextEditingController();
+  final _transactionImage = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -63,14 +40,14 @@ class _RouteNewTransactionState extends State<RouteNewTransaction> {
     bool _menu = args["menu"];
 
     User? _user = Provider.of<User?>(context);
-
     DatabaseService databaseService = DatabaseService(uid: _user!.uid);
 
     final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
     bool isButtonDisabled = false;
 
-    final _transactionName = TextEditingController();
-    final _transactionPrice = TextEditingController();
+    if (_pickedfile != null) {
+      _transactionImage.text = _pickedfile!.name;
+    }
 
     @override
     void dispose() {
@@ -115,13 +92,40 @@ class _RouteNewTransactionState extends State<RouteNewTransaction> {
                     }
                     return null;
                   },
-                  decoration: const InputDecoration(
-                    border: UnderlineInputBorder(),
-                    labelText: 'Transaction price',
+                  decoration: InputDecoration(
+                    border: const UnderlineInputBorder(),
+                    labelText:
+                        "Transaction price (in ${_chabbat.currency!.symbol})",
                   ),
                 ),
-                ElevatedButton(
-                    onPressed: selectFile, child: const Text('Upload image')),
+                Row(
+                  children: [
+                    Expanded(
+                      flex: 3,
+                      child: TextFormField(
+                        readOnly: true,
+                        controller: _transactionImage,
+                        autofocus: true,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please choose an image';
+                          }
+                          return null;
+                        },
+                        decoration: const InputDecoration(
+                          border: UnderlineInputBorder(),
+                          labelText: 'Image path',
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: TextButton(
+                          onPressed: selectFile,
+                          child: const Text('Upload image')),
+                    ),
+                  ],
+                ),
                 TextFormField(
                   enabled: false,
                   initialValue: _user.displayName,
@@ -145,8 +149,11 @@ class _RouteNewTransactionState extends State<RouteNewTransaction> {
                         if (_formKey.currentState!.validate()) {
                           if (!isButtonDisabled) {
                             setState(() => isButtonDisabled = true);
-                            ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text('Processing...')));
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(const SnackBar(
+                              content: Text('Processing...'),
+                              duration: Duration(milliseconds: 1000),
+                            ));
                             String urlImage = await uploadFile();
                             TransactionModel transaction = TransactionModel(
                               name: _transactionName.text,
@@ -158,9 +165,16 @@ class _RouteNewTransactionState extends State<RouteNewTransaction> {
                             if (await databaseService.addTransactionToChabbat(
                                     _chabbat.id, transaction) ==
                                 Checker.done) {
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(const SnackBar(
+                                content: Text('Transaction added !'),
+                                duration: Duration(milliseconds: 1000),
+                              ));
+                            } else {
                               ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
-                                      content: Text('Transaction added !')));
+                                      content: Text(
+                                          "Can't add transaction to chabbat")));
                             }
                             Navigator.pop(
                                 context, _chabbat.addTransaction(transaction));
@@ -169,20 +183,45 @@ class _RouteNewTransactionState extends State<RouteNewTransaction> {
                       },
                       child: const Text('Submit')),
                 ),
-                if (_pickedfile != null)
-                  Expanded(
-                    child: Container(
-                      child: Center(
-                        child: Image.memory(_pickedfile!.bytes!),
-                      ),
-                    ),
-                  )
               ],
             ),
           ),
         ),
       ),
     );
+  }
+
+  Future selectFile() async {
+    final result = await FilePicker.platform.pickFiles();
+    if (result == null) {
+      return;
+    }
+    setState(() {
+      _pickedfile = result.files.first;
+    });
+
+    showDialog(
+        context: context,
+        builder: (context) =>
+            AlertDialog(content: Image.memory(_pickedfile!.bytes!)));
+  }
+
+  Future<String> uploadFile() async {
+    // Define the name file for the FirebaseStorage
+    final path =
+        'files/${_pickedfile!.name}'; // TODO change name for each file (add user, date, and other)
+
+    // The file stored as a byte file
+    Uint8List file = _pickedfile!.bytes!;
+
+    // The directory of the destination
+    final ref = FirebaseStorage.instanceFor(app: Firebase.app('myFirebase'))
+        .ref()
+        .child(path);
+
+    _uploadTask = ref.putData(file);
+    final snapshot = await _uploadTask!.whenComplete(() {});
+    return await snapshot.ref.getDownloadURL();
   }
 }
 

@@ -3,6 +3,7 @@ import 'package:chabbat_pay/models/chabbat.dart';
 import 'package:chabbat_pay/models/transaction.dart';
 import 'package:chabbat_pay/models/user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:currency_picker/currency_picker.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:chabbat_pay/models/checker_join.dart';
 
@@ -39,7 +40,7 @@ class DatabaseService {
   }
 
   /// Create a new chabbat
-  Future createChabbatData(String name) async {
+  Future createChabbatData(String name, Currency currency) async {
     String chabbatId = generateId(6);
 
     // TODO: we have to get the result of the future
@@ -50,6 +51,7 @@ class DatabaseService {
       'open': true,
       'users': <String>[uid],
       'transactions': <TransactionModel>[],
+      'currency': currency.name,
     });
 
     addChabbatToUser(chabbatId);
@@ -149,8 +151,25 @@ class DatabaseService {
       for (var item in myDocs.docs.map((doc) => MapEntry(doc.id, doc["name"])))
         item.key: item.value
     };
-
     return users;
+  }
+
+  Future<bool> updateName(String name) async {
+    try {
+      userCollection.doc(uid).update({'name': name});
+    } catch (e) {
+      return false;
+    }
+    return true;
+  }
+
+  Future<bool> updateEmail(String mail) async {
+    try {
+      userCollection.doc(uid).update({'mail': mail});
+    } catch (e) {
+      return false;
+    }
+    return true;
   }
 
   Future<List<ChabbatModel>> getChabbatsDetails() async {

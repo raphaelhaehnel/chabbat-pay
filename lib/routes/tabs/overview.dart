@@ -10,13 +10,23 @@ class TabOverview extends StatelessWidget {
   Widget build(BuildContext context) {
     final args = ModalRoute.of(context)!.settings.arguments as ArgsChabbat;
     ChabbatModel _chabbat = args.chabbat;
-    Map<String, String> _usersMap = args.users;
 
     return Center(
       child: Column(
         children: [
-          Icon(_chabbat.open ? Icons.lock_open_rounded : Icons.lock_rounded),
-          const Text("Participants"),
+          Center(
+            child: Tooltip(
+              child: Chip(
+                label: const Text("Status"),
+                avatar: Icon(_chabbat.open
+                    ? Icons.lock_open_rounded
+                    : Icons.lock_rounded),
+                backgroundColor:
+                    _chabbat.open ? Colors.green[300] : Colors.red[300],
+              ),
+              message: _chabbat.open ? "open" : "closed",
+            ),
+          ),
           Expanded(
             child: SizedBox(
               height: 200.0,
@@ -25,9 +35,12 @@ class TabOverview extends StatelessWidget {
                 itemBuilder: (context, index) {
                   return Card(
                     child: ListTile(
-                      title: Text(id_to_name(_chabbat.usersId[index], context)),
+                      title: Text(idToName(_chabbat.usersId[index], context)),
                       trailing: _chabbat.admin == _chabbat.usersId[index]
-                          ? const Icon(Icons.admin_panel_settings)
+                          ? const Tooltip(
+                              child: Icon(Icons.admin_panel_settings),
+                              message: "admin",
+                            )
                           : null,
                     ),
                   );

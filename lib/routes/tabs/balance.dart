@@ -34,6 +34,7 @@ class TabBalance extends StatelessWidget {
     return Center(
       child: Column(
         children: [
+          Text("Total chabbat: $_totalChabbat ${_chabbat.currency!.symbol}"),
           Expanded(
             child: SizedBox(
               height: 200.0,
@@ -43,9 +44,9 @@ class TabBalance extends StatelessWidget {
                   return Card(
                     child: ListTile(
                       title: Text(
-                          id_to_name(_result.keys.elementAt(index), context)),
-                      trailing:
-                          Text(_result.values.elementAt(index).toString()),
+                          idToName(_result.keys.elementAt(index), context)),
+                      trailing: Text(
+                          "${_result.values.elementAt(index).toString()} ${_chabbat.currency!.symbol}"),
                     ),
                   );
                 },
