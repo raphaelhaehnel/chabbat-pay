@@ -2,7 +2,7 @@
     package="com.example.chabbat_pay">
    <application
         android:label="chabbat_pay"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/launcher_icon">
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
