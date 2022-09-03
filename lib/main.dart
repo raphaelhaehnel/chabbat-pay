@@ -1,3 +1,4 @@
+import 'package:chabbat_pay/firebase_options.dart';
 import 'package:chabbat_pay/routes/chabbat.dart';
 import 'package:chabbat_pay/routes/chabbat_history.dart';
 import 'package:chabbat_pay/routes/join_chabbat.dart';
@@ -5,16 +6,15 @@ import 'package:chabbat_pay/routes/login_redirection.dart';
 import 'package:chabbat_pay/routes/new_chabbat.dart';
 import 'package:chabbat_pay/routes/new_transaction.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import './routes/home.dart';
 import './routes/profile.dart';
 import 'package:flutter_login/flutter_login.dart';
 import './services/auth.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 void main() async {
-  await dotenv.load(fileName: ".env");
   await initializeDefault();
   runApp(const MyApp());
 }
@@ -59,8 +59,6 @@ myAppTheme() {
 class LoginScreen extends StatelessWidget {
   LoginScreen({Key? key}) : super(key: key);
 
-  Duration get loginTime => Duration(milliseconds: 100);
-
   final AuthService _auth = AuthService();
 
   Future<String?> _authUser(LoginData data) async {
@@ -76,21 +74,19 @@ class LoginScreen extends StatelessWidget {
   Future<String?> _signupUser(SignupData data) async {
     dynamic result = await _auth.signUpEmail(data.name, data.password);
     if (result == null) {
-      return result.toString();
+      return "Cannot sign in. Please try again";
     } else {
       // Return null to validate authentication
       return null;
     }
   }
 
-  Future<String?> _recoverPassword(String name) {
-    debugPrint('Name: $name');
-    return Future.delayed(loginTime).then((_) {
-      if (true) {
-        return 'User not exists';
-      }
-      return null;
-    });
+  Future<String?> _recoverPassword(String email) async {
+    String? result = _auth.resetPassword(email);
+    if (result != null) {
+      return result;
+    }
+    return null;
   }
 
   @override
@@ -115,15 +111,7 @@ class LoginScreen extends StatelessWidget {
 Future<void> initializeDefault() async {
   FirebaseApp app = await Firebase.initializeApp(
       name: "myFirebase", options: firebaseOptions);
-  print('Initialized default app $app');
+  if (kDebugMode) {
+    print('Initialized default app $app');
+  }
 }
-
-// Authentification parameters of Firebase
-FirebaseOptions get firebaseOptions => FirebaseOptions(
-    apiKey: dotenv.env['API_KEY']!,
-    authDomain: "payetonchabbat-1570735814576.firebaseapp.com",
-    projectId: "payetonchabbat-1570735814576",
-    storageBucket: "payetonchabbat-1570735814576.appspot.com",
-    messagingSenderId: "1093457557540",
-    appId: "1:1093457557540:web:b5ef3e1bd352959b3ac0b1",
-    measurementId: "G-0VB8WWZLC5");

@@ -8,7 +8,14 @@ class AuthService {
 
   Stream<User?> get user {
     return _auth.authStateChanges();
-    ;
+  }
+
+  String? resetPassword(email) {
+    try {
+      _auth.sendPasswordResetEmail(email: email);
+    } catch (err) {
+      return err.toString();
+    }
   }
 
   // sin in anonymously
@@ -55,8 +62,8 @@ class AuthService {
   Future signOut() async {
     try {
       return await _auth.signOut();
-    } catch (e) {
-      print(e.toString());
+    } catch (err) {
+      print(err.toString());
       return null;
     }
   }

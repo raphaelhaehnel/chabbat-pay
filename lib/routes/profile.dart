@@ -1,13 +1,11 @@
 import 'package:chabbat_pay/routes/edit_profile.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../components/menu.dart';
 
 class RouteProfile extends StatelessWidget {
-  RouteProfile({Key? key}) : super(key: key) {}
+  const RouteProfile({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -59,19 +57,5 @@ class RouteProfile extends StatelessWidget {
       ),
       drawer: const MenuApp(),
     );
-  }
-
-// TODO : this code don't have to be here ! Please use two databases: one for users and one for chabbats
-  updateData(DocumentSnapshot item) {
-    // We run a transaction so the update takes place only after the information is updated on the server.
-    FirebaseFirestore.instanceFor(app: Firebase.app('myFirebase'))
-        .runTransaction((transaction) async {
-      DocumentSnapshot freshSnap = await transaction.get(item.reference);
-      await transaction
-          .update(freshSnap.reference, {'credit': freshSnap['credit'] + 1});
-    });
-
-    // If you want instant but not robust update:
-    // item.reference.update({'credit': item['credit'] + 1});
   }
 }

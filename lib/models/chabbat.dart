@@ -5,7 +5,7 @@ import 'package:currency_picker/currency_picker.dart';
 class ChabbatModel {
   final String id;
   final String name;
-  final bool open;
+  bool open;
   final String admin;
   final List<String> usersId;
   final Timestamp date;

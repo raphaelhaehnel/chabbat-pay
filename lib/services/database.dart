@@ -22,6 +22,9 @@ class DatabaseService {
 
   DatabaseService({required this.uid});
 
+  FirebaseFirestore firebaseFirestore =
+      FirebaseFirestore.instanceFor(app: Firebase.app('myFirebase'));
+
   final CollectionReference userCollection =
       FirebaseFirestore.instanceFor(app: Firebase.app('myFirebase'))
           .collection('users');
@@ -29,6 +32,37 @@ class DatabaseService {
   final CollectionReference chabbatsCollection =
       FirebaseFirestore.instanceFor(app: Firebase.app('myFirebase'))
           .collection('chabbats');
+
+  closeChabbat(chabbatId) {
+    chabbatsCollection.doc(chabbatId).update({"open": false});
+  }
+
+// TODO : this code don't have to be here ! Please use two databases: one for users and one for chabbats
+  // foo(DocumentSnapshot item) {
+
+  //   // We run a transaction so the update takes place only after the information is updated on the server.
+  //   FirebaseFirestore.instanceFor(app: Firebase.app('myFirebase'))
+  //       .runTransaction((transaction) async {
+  //     DocumentSnapshot freshSnap = await transaction.get(item.reference);
+  //     await transaction
+  //         .update(freshSnap.reference, {'credit': freshSnap['credit'] + 1});
+  //   });
+
+  //   // If you want instant but not robust update:
+  //   // item.reference.update({'credit': item['credit'] + 1});
+  // }
+
+  // final sfDocRef = db.collection("cities").doc("SF");
+  // db.runTransaction((transaction) async {
+  //   final snapshot = await transaction.get(sfDocRef);
+  //   // Note: this could be done without a transaction
+  //   //       by updating the population using FieldValue.increment()
+  //   final newPopulation = snapshot.get("population") + 1;
+  //   transaction.update(sfDocRef, {"population": newPopulation});
+  // }).then(
+  //   (value) => print("DocumentSnapshot successfully updated!"),
+  //   onError: (e) => print("Error updating document $e"),
+  // );
 
   Future updateUserData(String name, List chabbats, points, mail) async {
     return await userCollection.doc(uid).set({
@@ -43,7 +77,6 @@ class DatabaseService {
   Future createChabbatData(String name, Currency currency) async {
     String chabbatId = generateId(6);
 
-    // TODO: we have to get the result of the future
     await chabbatsCollection.doc(chabbatId).set({
       'name': name,
       'date': Timestamp.now(),

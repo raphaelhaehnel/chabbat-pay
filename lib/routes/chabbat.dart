@@ -1,3 +1,4 @@
+import 'package:chabbat_pay/components/log_out_action.dart';
 import 'package:chabbat_pay/components/menu.dart';
 import 'package:chabbat_pay/models/args/chabbat.dart';
 import 'package:chabbat_pay/models/chabbat.dart';
@@ -6,6 +7,7 @@ import 'package:chabbat_pay/services/auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:nil/nil.dart';
 import 'package:provider/provider.dart';
 import 'package:chabbat_pay/routes/tabs/overview.dart';
 import 'package:chabbat_pay/routes/tabs/transactions.dart';
@@ -24,7 +26,7 @@ class _RouteChabbatState extends State<RouteChabbat> {
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   final List<Widget> _widgetOptions = <Widget>[
-    const TabOverview(),
+    TabOverview(),
     TabTransactions(null),
     const TabBalance(),
   ];
@@ -47,9 +49,7 @@ class _RouteChabbatState extends State<RouteChabbat> {
           '/home',
         );
       });
-      return const Center(
-        child: CircularProgressIndicator(),
-      );
+      return nil;
     }
     final args = ModalRoute.of(context)!.settings.arguments as ArgsChabbat;
 
@@ -61,15 +61,8 @@ class _RouteChabbatState extends State<RouteChabbat> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Chabbat ${_chabbat.name}'),
-        actions: [
-          TextButton.icon(
-              onPressed: () async {
-                await _auth.signOut();
-                Navigator.pushReplacementNamed(context, '/');
-              },
-              icon: const Icon(Icons.person),
-              label: const Text('Logout'),
-              style: TextButton.styleFrom(primary: Colors.grey[800])),
+        actions: const [
+          LogOutAction(),
         ],
       ),
       body: _widgetOptions.elementAt(_selectedIndex),

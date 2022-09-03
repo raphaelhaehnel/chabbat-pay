@@ -1,4 +1,5 @@
 import 'package:chabbat_pay/components/home_button.dart';
+import 'package:chabbat_pay/components/log_out_action.dart';
 import 'package:chabbat_pay/models/args/chabbat.dart';
 import 'package:chabbat_pay/services/auth.dart';
 import 'package:chabbat_pay/services/database.dart';
@@ -27,15 +28,8 @@ class _RouteHomeState extends State<RouteHome> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Home'),
-        actions: [
-          TextButton.icon(
-              onPressed: () async {
-                await _auth.signOut();
-                Navigator.pushReplacementNamed(context, '/');
-              },
-              icon: const Icon(Icons.person),
-              label: const Text('Logout'),
-              style: TextButton.styleFrom(primary: Colors.grey[800])),
+        actions: const [
+          LogOutAction(),
         ],
       ),
       body: Center(

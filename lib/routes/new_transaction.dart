@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:typed_data';
 import 'package:chabbat_pay/models/chabbat.dart';
 import 'package:chabbat_pay/models/checker_join.dart';
@@ -33,6 +32,8 @@ class _RouteNewTransactionState extends State<RouteNewTransaction> {
   final _transactionPrice = TextEditingController();
   final _transactionImage = TextEditingController();
 
+  bool _isButtonEnabled = true;
+
   @override
   Widget build(BuildContext context) {
     final args = ModalRoute.of(context)!.settings.arguments as Map;
@@ -43,7 +44,6 @@ class _RouteNewTransactionState extends State<RouteNewTransaction> {
     DatabaseService databaseService = DatabaseService(uid: _user!.uid);
 
     final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-    bool isButtonDisabled = false;
 
     if (_pickedfile != null) {
       _transactionImage.text = _pickedfile!.name;
@@ -69,6 +69,7 @@ class _RouteNewTransactionState extends State<RouteNewTransaction> {
             child: Column(
               children: [
                 TextFormField(
+                  enabled: _isButtonEnabled,
                   controller: _transactionName,
                   autofocus: true,
                   validator: (value) {
@@ -83,6 +84,7 @@ class _RouteNewTransactionState extends State<RouteNewTransaction> {
                   ),
                 ),
                 TextFormField(
+                  enabled: _isButtonEnabled,
                   controller: _transactionPrice,
                   keyboardType: const TextInputType.numberWithOptions(
                       signed: false, decimal: true),
@@ -103,6 +105,7 @@ class _RouteNewTransactionState extends State<RouteNewTransaction> {
                     Expanded(
                       flex: 3,
                       child: TextFormField(
+                        enabled: _isButtonEnabled,
                         readOnly: true,
                         controller: _transactionImage,
                         autofocus: true,
@@ -147,48 +150,55 @@ class _RouteNewTransactionState extends State<RouteNewTransaction> {
                   child: ElevatedButton(
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
-                          if (!isButtonDisabled) {
-                            setState(() => isButtonDisabled = true);
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(const SnackBar(
-                              content: Text('Processing...'),
-                              duration: Duration(milliseconds: 1000),
-                            ));
-                            String urlImage = await uploadFile();
-                            TransactionModel transaction = TransactionModel(
-                              name: _transactionName.text,
-                              user: _user.uid,
-                              image: urlImage,
-                              cost: double.parse(_transactionPrice.text),
-                              date: Timestamp.now(),
-                            );
-                            if (await databaseService.addTransactionToChabbat(
-                                    _chabbat.id, transaction) ==
-                                Checker.done) {
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(const SnackBar(
-                                content: Text('Transaction added !'),
-                                duration: Duration(milliseconds: 1000),
-                              ));
-                            } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      content: Text(
-                                          "Can't add transaction to chabbat")));
-                            }
-                            Navigator.pop(
-                                context, _chabbat.addTransaction(transaction));
+                          if (_isButtonEnabled) {
+                            submitButton(_user, _chabbat, databaseService);
                           }
                         }
                       },
                       child: const Text('Submit')),
                 ),
+                if (_isButtonEnabled == false)
+                  const Center(
+                    child: CircularProgressIndicator(),
+                  ),
               ],
             ),
           ),
         ),
       ),
     );
+  }
+
+  submitButton(User? _user, ChabbatModel _chabbat,
+      DatabaseService databaseService) async {
+    setState(() {
+      _isButtonEnabled = false;
+    });
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      content: Text('Processing...'),
+      duration: Duration(milliseconds: 10000),
+    ));
+
+    String urlImage = await uploadFile();
+    TransactionModel transaction = TransactionModel(
+      name: _transactionName.text,
+      user: _user!.uid,
+      image: urlImage,
+      cost: double.parse(_transactionPrice.text),
+      date: Timestamp.now(),
+    );
+    if (await databaseService.addTransactionToChabbat(
+            _chabbat.id, transaction) ==
+        Checker.done) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Transaction added !'),
+        duration: Duration(milliseconds: 1000),
+      ));
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Can't add transaction to chabbat")));
+    }
+    Navigator.pop(context, _chabbat.addTransaction(transaction));
   }
 
   Future selectFile() async {
@@ -219,8 +229,12 @@ class _RouteNewTransactionState extends State<RouteNewTransaction> {
         .ref()
         .child(path);
 
+    // Upload the file
     _uploadTask = ref.putData(file);
+
+    //
     final snapshot = await _uploadTask!.whenComplete(() {});
+
     return await snapshot.ref.getDownloadURL();
   }
 }

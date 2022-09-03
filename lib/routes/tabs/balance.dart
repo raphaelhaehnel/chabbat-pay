@@ -34,7 +34,8 @@ class TabBalance extends StatelessWidget {
     return Center(
       child: Column(
         children: [
-          Text("Total chabbat: $_totalChabbat ${_chabbat.currency!.symbol}"),
+          Text(
+              "Total chabbat: ${_totalChabbat.toStringAsFixed(2)} ${_chabbat.currency!.symbol}"),
           Expanded(
             child: SizedBox(
               height: 200.0,
