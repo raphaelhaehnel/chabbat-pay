@@ -4,9 +4,10 @@ A Flutter app to manage Shabbat organization with friends, tracking payments and
 
 ## App description
 
-This project has been powered by Flutter.
-Used Firebase as back-end and Firestore Database as database.
+- This project has been powered by Flutter.
+- Used Firebase as back-end and Firestore Database as database.
 
+## Usage
 The first page allows you to log in or sign in. The app is connected to firebase for the database and the authentification process.
 
 <img src="https://user-images.githubusercontent.com/69756617/195408432-3f378e2c-c949-4770-aabc-6243b0d3dcaf.png" width="220">
