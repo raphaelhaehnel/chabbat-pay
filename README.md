@@ -1,11 +1,11 @@
 # Chabbat Pay
 
-An app to manage your chabbat with your friends
+A Flutter app to manage Shabbat organization with friends, tracking payments and points for those who purchase and organize the event.
 
 ## App description
 
-1.0-alpha   first deployment of the application. Only main features are working.
 This project has been powered by Flutter.
+Used Firebase as back-end and Firestore Database as database.
 
 The first page allows you to log in or sign in. The app is connected to firebase for the database and the authentification process.
 
